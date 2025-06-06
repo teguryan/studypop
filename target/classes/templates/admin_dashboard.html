@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student - Halaman Utama</title>
-    <link rel="stylesheet" href="/css/student_dashboard.css">
+    <title>Admin - Halaman Utama</title>
+    <link rel="stylesheet" href="/css/admin_dashboard.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
     <div class="profile-content">
         <div class="profile-header">
             <h2>Welcome, Admin!</h2>
-            <p>Apa ada quiz baru, Pak?</p>
+            <p>Mau melakukan apa hari ini?</p>
         </div>
 
         <br>
@@ -31,8 +31,14 @@
 
         <div class="action-card">
             <div class="cards">
+                <h3>Tambah Flashcard</h3>
+                <div class="action-buttons">
+                    <button class="add-quiz-btn">Tambah</button>
+                </div>
+            </div>
+            <div class="cards">
                 <div class="content">
-                    <h3>Flashcard</h3>
+                    <h3>Lihat Flashcard</h3>
                     <div class="action-buttons">
                         <button class="see-quiz-btn">Lihat</button>
                     </div>
@@ -41,10 +47,10 @@
 
             <div class="cards">
                 <div class="content">
-                    <h3>Quiz</h3>
+                    <h3>Kerjakan Quiz</h3>
                     <div class="action-buttons">
-                        <a href="/choose_topic">
-                            <button class="do-quiz-btn">Pilih Topik Quiz</button>
+                        <a href="quiz_page.html?role=admin">
+                            <button class="do-quiz-btn">Kerjakan</button>
                         </a>
                     </div>
                 </div>
@@ -52,12 +58,23 @@
 
             <div class="cards">
                 <div class="content">
-                    <h3>Statistik</h3>
+                    <h3>Hapus Flashcard</h3>
+                        <div class="action-buttons">
+                            <button class="del-quiz-btn">Hapus</button>
+                        </div>
+                </div>
+            </div>
+
+            <div class="cards">
+                <div class="content">
+                    <h3>Lihat Statistik</h3>
                     <div class="action-buttons">
-                        <button class="do-quiz-btn">Lihat</button>
+                        <button class="seestat-quiz-btn">Lihat aku!</button>
                     </div>
                 </div>
             </div>
+
+
         </div>
     </div>
 
