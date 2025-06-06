@@ -1,0 +1,87 @@
+* {
+    box-sizing: border-box;
+}
+
+/* Gaya untuk teks StudyPop */
+.study-pop-text {
+    font-family: 'Poppins', sans-serif; /* Font Poppins */
+    font-weight: 700;                   /* Bold weight */
+    font-size: 16px;                    /* Ukuran font 16px */
+    color: #333;                        /* Warna teks */
+    margin-bottom: 10px;                /* Jarak sedikit agar tidak terlalu rapat dengan Welcome back */
+    margin-top: -10px;                  /* Menambahkan nilai negatif agar lebih ke atas */
+}
+
+
+/* Gaya untuk elemen lainnya */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #9cc97f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-container {
+    background-color: #cddecb;
+    padding: 40px 40px;
+    border-radius: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.login-card h1 {
+    font-size: 35px;
+    color: #333;
+    /*margin-bottom: 20px;  !* Mengurangi jarak judul *!*/
+}
+
+.login-card form input {
+    font-family: Poppins, sans-serif;
+    padding: 15px;
+    width: 100%;
+    margin: 5px 0;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    background-color: #E4E4E4;
+}
+
+/* Menurunkan box username sekitar dua kali enter */
+.login-card form input[type="text"] {
+    margin-top: 20px;  /* Menurunkan form username */
+}
+
+/* Mengurangi jarak antara username dan password */
+.login-card form input[type="password"] {
+    margin-top: 2px; /* Mengurangi jarak dengan input username */
+}
+
+.login-card form button {
+    font-family: Poppins, sans-serif;
+    font-weight: 700;
+    padding: 15px;
+    width: 100%;
+    font-size: 16px;
+    background-color: #9cc97f;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Mengurangi jarak antara tombol login dan form password */
+.login-card form button {
+    margin-top: 10px; /* Memastikan tombol lebih dekat dengan input password */
+}
+
+.login-card form button:hover {
+    background-color: #45a049;
+}
