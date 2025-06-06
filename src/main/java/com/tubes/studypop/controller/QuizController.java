@@ -5,6 +5,7 @@ import com.tubes.studypop.model.Flashcard;
 import com.tubes.studypop.repository.FlashcardRepository;
 import com.tubes.studypop.service.Quiz;
 import com.tubes.studypop.repository.TopicQuizRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,45 +30,160 @@ public class QuizController {
     // Menampilkan halaman untuk memilih topik quiz
     @GetMapping("/choose_topic")
     public String chooseTopic(Model model) {
+        // Mengambil semua topik quiz dari database
         List<TopikQuiz> topics = topicQuizRepository.findAll();
+        // Menambahkan topik ke model agar bisa ditampilkan
         model.addAttribute("topik_quiz", topics);
-        return "choose_topic";  // Halaman untuk memilih topik
+        return "choose_topic";  // Mengembalikan ke halaman memilih topik
     }
 
     // Menampilkan quiz berdasarkan topik
-    @GetMapping("/start_quiz")  //nama file html nya
-    public String startQuiz(@RequestParam("topicId") Long topicId, Model model) {
-        TopikQuiz topic = topicQuizRepository.findById(topicId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid topic Id"));
+    @GetMapping("/quiz_page")
+    public String quizPage(@RequestParam("topicId") Long topicId,
+                           @RequestParam(value = "questionIndex", defaultValue = "0") int questionIndex,
+                           Model model) {
 
-        // Mulai quiz untuk topik yang dipilih
-        List<Flashcard> flashcards = quiz.startQuiz(topic);
-        model.addAttribute("flashcard", flashcards);   // pakai nama tabel di mysql
+        try {
+            // Debugging log untuk melihat nilai yang diterima
+            System.out.println("Received topicId: " + topicId);
+            System.out.println("Received questionIndex: " + questionIndex);
 
-        // Menampilkan halaman quiz
-        return "quiz_page";  // Halaman quiz untuk memulai kuis
+            // Mengambil topik quiz berdasarkan ID
+            TopikQuiz topic = topicQuizRepository.findById(topicId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid topic Id"));
+
+            // Mengambil soal (flashcard) terkait dengan topik
+            List<Flashcard> flashcards = flashcardRepository.findByTopikQuizId(topicId);
+
+            // Pastikan index tidak melebihi jumlah soal
+            if (questionIndex >= flashcards.size()) {
+                return "quiz_result"; // Halaman selesai jika soal sudah habis
+            }
+
+            // Ambil soal berdasarkan index
+            Flashcard flashcard = flashcards.get(questionIndex);
+
+            // Menambahkan soal ke model
+            model.addAttribute("flashcard", flashcard);  // Mengirimkan soal
+            model.addAttribute("topicName", topic.getName());  // Mengirimkan nama topik
+            model.addAttribute("topicId", topicId);  // Menambahkan ID topik ke model
+            model.addAttribute("questionIndex", questionIndex); // Menambahkan index soal ke model
+        } catch (Exception e) {
+            // Log error yang lebih detail
+            System.out.println("Error occurred: " + e.getMessage());
+            e.printStackTrace();
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error_page";  // Tampilkan halaman error jika terjadi kesalahan
+        }
+        return "quiz_page"; // Mengarahkan ke halaman quiz_page
     }
 
-    // Menangani pengiriman jawaban dan menghitung skor
-    @PostMapping("/submit_answer")
-    public String submitAnswer(@RequestParam("userAnswer") String userAnswer,
-                               @RequestParam("flashcardId") Long flashcardId,
-                               @RequestParam("role") String role,
-                               Model model) {
+//    @PostMapping("/submit-answer")
+//    public String submitAnswer(@RequestParam("flashcardIds[]") Long[] flashcardIds,
+//                               @RequestParam("userAnswer[]") String[] userAnswers,
+//                               @RequestParam(value = "questionIndex", defaultValue = "0") int questionIndex,
+//                               @RequestParam("topicId") Long topicId,
+//                               @RequestParam("role") String role,
+//                               Model model) {
+//
+//        int totalScore = 0; //variabel utk hitung total score
+//        int incorrectAnswers = 0;
+//
+//        // Debugging log untuk memastikan nilai yang diteruskan
+//        System.out.println("topicId: " + topicId);
+//        System.out.println("questionIndex: " + questionIndex);
+//
+//
+//        // Cek panjang array jawaban dan ID flashcard
+//        if (flashcardIds.length != userAnswers.length) {
+//            model.addAttribute("error", "Jumlah soal dan jawaban tidak cocok.");
+//            return "error_page";  // Tampilkan halaman error jika ada masalah dengan data
+//        }
+//
+//        for (int i = 0; i < flashcardIds.length; i++) {
+//            Long flashcardId = flashcardIds[i];
+//            String userAnswer = userAnswers[i];
+//
+//            // Proses setiap flashcard dan jawaban yang diterima
+//            Flashcard flashcard = flashcardRepository.findById(flashcardId)
+//                    .orElseThrow(() -> new IllegalArgumentException("Invalid flashcard Id"));
+//
+//            boolean correct = flashcard.getAnswer().equals(userAnswer);
+//
+//            if (correct) {
+//                totalScore++;  // Tambah skor jika jawaban benar
+//            }
+//
+//            // Tambahkan logika untuk memproses jawaban (misalnya menambah skor)
+//            model.addAttribute("correct", totalScore > 0);
+//            model.addAttribute("score", totalScore);
+//            model.addAttribute("flashcards", flashcard); // Kirim soal yang dijawab ke model
+//
+//        }
+//
+//        // Lanjutkan logika untuk mengarahkan ke soal berikutnya atau dashboard
+//        return "redirect:/quiz_page?topicId=" + topicId + "&questionIndex=" + (questionIndex + 1);
+//    }
+@PostMapping("/submit-answer")
+public String submitAnswer(@RequestParam("flashcardIds[]") Long[] flashcardIds,
+                           @RequestParam("userAnswer[]") String[] userAnswers,
+                           @RequestParam(value = "questionIndex", defaultValue = "0") int questionIndex,
+                           @RequestParam("topicId") Long topicId,
+                           HttpSession session,
+                           Model model) {
+
+    int correctAnswers = 0;
+    int incorrectAnswers = 0;
+
+    if (flashcardIds.length != userAnswers.length) {
+        model.addAttribute("error", "Jumlah soal dan jawaban tidak cocok.");
+        return "error_page";
+    }
+
+    for (int i = 0; i < flashcardIds.length; i++) {
+        Long flashcardId = flashcardIds[i];
+        String userAnswer = userAnswers[i];
+
         Flashcard flashcard = flashcardRepository.findById(flashcardId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid flashcard Id"));
 
-        // Cek jawaban pengguna
-        boolean correct = quiz.checkAnswer(flashcard, userAnswer);
-        model.addAttribute("correct", correct);
-        model.addAttribute("score", quiz.getScore());
-        model.addAttribute("role", role);
+        // Memeriksa jawaban
+        boolean correct = flashcard.getAnswer().equalsIgnoreCase(userAnswer);
 
-        // Arahkan ke halaman yang sesuai berdasarkan role
-        if ("student".equalsIgnoreCase(role)) {
-            return "redirect:/student_dashboard";  // Jika role student, redirect ke student dashboard
+        if (correct) {
+            correctAnswers++;
         } else {
-            return "redirect:/admin_dashboard";  // Jika role admin, redirect ke admin dashboard
+            incorrectAnswers++;
         }
     }
+
+    // Menyimpan hasil ke session
+    session.setAttribute("correctAnswers", correctAnswers);
+    session.setAttribute("incorrectAnswers", incorrectAnswers);
+
+    // Cek jika soal sudah selesai
+    long totalQuestions = flashcardRepository.countByTopikQuizId(topicId);
+    if (questionIndex + 1 >= totalQuestions) {
+        model.addAttribute("correctAnswers", correctAnswers);
+        model.addAttribute("incorrectAnswers", incorrectAnswers);
+        return "quiz_result";  // Tampilkan halaman hasil quiz
+    }
+
+    // Lanjutkan ke soal berikutnya
+    return "redirect:/quiz_page?topicId=" + topicId + "&questionIndex=" + (questionIndex + 1);
+}
+
+
+//    @GetMapping("/quiz_result")
+//    public String quizResult(@RequestParam("topicId") Long topicId, Model model) {
+//        // Menangani topik quiz berdasarkan topicId
+//        TopikQuiz topic = topicQuizRepository.findById(topicId)
+//                .orElseThrow(() -> new IllegalArgumentException("Invalid topic Id"));
+//
+//        model.addAttribute("topicName", topic.getName()); // Kirimkan nama topik ke model
+//
+//        return "quiz_result"; // Tampilkan halaman quiz_result
+//    }
+
+
 }

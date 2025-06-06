@@ -1,4 +1,8 @@
-/* Reset CSS */
+* {
+    box-sizing: border-box;
+}
+
+/* Basic Reset */
 * {
     margin: 0;
     padding: 0;
@@ -17,21 +21,21 @@ body {
     align-items: center; /* Center the content vertically */
 }
 
-/* Profile Container (Left Sidebar and Main Content) */
 .profile-container {
     display: flex;
     width: 100%;
     height: 100%;
 }
 
-/* Sidebar Styling */
+
+/*!* Sidebar Styling *!*/
 .sidebar {
     width: 250px;
     background-color: #9cc97f;
     color: #fff;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
     padding: 20px;
     box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.1);
 }
@@ -66,20 +70,20 @@ body {
     color: #FFD700;
 }
 
-/* Profile Content Area (Right Side of the Sidebar) */
-.profile-content {
+/* Main Content Area (Right Side of the Sidebar) */
+.main-content {
     flex-grow: 1;
     background-color: #fff;
     padding: 40px;
     overflow-y: auto;
 }
 
-.profile-header {
+.main-content-header {
     text-align: center;
     margin-bottom: 40px;
 }
 
-.profile-header h2 {
+.main-content-header h2 {
     font-family: Poppins, sans-serif;
     font-size: 32px;
     font-weight: bold;
@@ -87,69 +91,10 @@ body {
     margin-bottom: 10px;
 }
 
-.profile-header p {
+.main-content-header p {
     font-family: Poppins, sans-serif;
     font-size: 18px;
     color: #666;
-}
-
-/* Card Containers for Action Buttons */
-.action-card {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 5px;
-    padding: 20px;
-    flex-wrap: wrap;
-}
-
-.cards {
-    background-color: #f1f5f8;
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    width: 250px;
-    height: 150px;
-    text-align: center;
-    transition: transform 0.3s;
-}
-
-.cards:hover {
-    transform: translateY(-5px);
-}
-
-.cards h3 {
-    font-family: Poppins, sans-serif;
-    font-size: 20px;
-    color: #333;
-    margin-bottom: 15px;
-}
-
-.cards p {
-    font-family: Poppins, sans-serif;
-    font-size: 18px;
-    color: #555;
-}
-
-/* Button Styling */
-.action-buttons button {
-    font-family: Poppins, sans-serif;
-    background-color: #9cc97f;
-    color: white;
-    font-size: 16px;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.action-buttons button:hover {
-    background-color: #45a049;
 }
 
 .product-table {
@@ -165,32 +110,21 @@ body {
 }
 
 .product-table th {
-    background-color: #34495E;
+    background-color: #9cc97f;
     color: white;
 }
 
 .view-btn {
-    background-color: #16A085;
+    font-family: Poppins, sans-serif;
+    background-color: #9cc97f;
     color: white;
     padding: 5px 10px;
     border: none;
+    border-radius: 10px;
     cursor: pointer;
 }
 
 .view-btn:hover {
-    background-color: #1ABC9C;
+    background-color: #45a049;
 }
 
-.status-pending {
-    background-color: #F39C12;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-}
-
-.status-active {
-    background-color: #2ECC71;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-}

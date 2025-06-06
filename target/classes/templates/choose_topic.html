@@ -9,21 +9,32 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
+
 <body>
 <div class="profile-container">
-    <!-- Sidebar -->
+
+<!--    sidebar   -->
     <div class="sidebar">
         <div class="sidebar-header">
             <h2>StudyPop</h2>
         </div>
+
         <ul class="menu">
-            <li><a href="/logout">Logout</a></li>
+<!--            <li><a href="/student_dashboard">Dashboard</a></li>-->
+            <li><a href="/login">Logout</a></li>
         </ul>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-        <h2>Pilih Topik Kuis</h2>
+        <div class="main-content-header">
+            <h2>Pilih Topik Kuiz</h2>
+            <p>Mau belajar apa hari ini?</p>
+        </div>
+
+        <br>
+        <br>
+
         <table class="product-table">
             <thead>
             <tr>
@@ -32,31 +43,24 @@
                 <th>Statistik</th>
             </tr>
             </thead>
+
+            <!-- Mengambil data dari model 'topik_quiz' -->
             <tbody>
-            <tr>
-                <td><a href="#">Pemrograman Web</a></td>
-                <td>#P001</td>
-                <td>Rp. 90.50</td>
-                <td>350 siswa</td>
-                <td>Matakuliah</td>
-                <td><span class="status-pending">Pending</span></td>
-                <td><button class="view-btn">Lihat Soal</button></td>
+            <tr th:each="topic : ${topik_quiz}">
+                <td th:text="${topic.name}"></td>
+
+                <!-- ini nge direct button kerjakan ke halaman start_quiz.html-->
+                <td><a th:href="@{/quiz_page?topicId={id}(id=${topic.id})}">
+                    <button class="view-btn">Kerjakan Soal</button>
+                </a>
+                </td>
+                <td><button class="view-btn">Lihat Statistik</button></td>
             </tr>
-            <tr>
-                <td><a href="#">Algoritma dan Pemrograman</a></td>
-                <td>#P002</td>
-                <td>Rp. 120.00</td>
-                <td>650 siswa</td>
-                <td>Matakuliah</td>
-                <td><span class="status-active">Active</span></td>
-                <td><button class="view-btn">Lihat Soal</button></td>
-            </tr>
-            <!-- Additional rows here -->
             </tbody>
         </table>
     </div>
 
-    <script src="script.js"></script>
+<!--    <script src="script.js"></script>-->
 </div>
 </body>
 </html>

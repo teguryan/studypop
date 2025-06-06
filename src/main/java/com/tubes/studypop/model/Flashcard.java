@@ -8,7 +8,6 @@ public class Flashcard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // id soal (flashcard)
-
     private String question;  // Soal pertanyaan
     private String answer;    // Jawaban yang benar
 
@@ -56,4 +55,7 @@ public class Flashcard {
     public void setTopikQuiz(TopikQuiz topikQuiz) {
         this.topikQuiz = topikQuiz;
     }
+
+
+
 }

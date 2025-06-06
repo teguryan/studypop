@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TopicQuizRepository extends JpaRepository<TopikQuiz, Long> {
+    // Anda bisa menambahkan query khusus jika diperlukan
 }

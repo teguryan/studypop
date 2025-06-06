@@ -15,18 +15,19 @@ public class TopikQuiz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;  // Nama topik
 
     @OneToMany(mappedBy = "topikQuiz", cascade = CascadeType.ALL)
     private List<Flashcard> flashcards;  // Kumpulan soal dalam topik quiz
 
     // Constructor, getter, setter
-    public TopikQuiz() {}
-
-    public TopikQuiz(String name) {
-        this.name = name;
-    }
+//    public TopikQuiz() {
+//
+//    }
+//
+//    public TopikQuiz(String name) {
+//        this.name = name;
+//    }
 
     public Long getId() {
         return id;
