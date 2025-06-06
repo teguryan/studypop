@@ -78,63 +78,112 @@ public class QuizController {
         return "quiz_page"; // Mengarahkan ke halaman quiz_page
     }
 
-    @PostMapping("/submit-answer")
-    public String submitAnswer(@RequestParam("flashcardIds[]") Long[] flashcardIds,
-                               @RequestParam("userAnswer[]") String[] userAnswers,
-                               @RequestParam(value = "questionIndex", defaultValue = "0") int questionIndex,
-                               @RequestParam("topicId") Long topicId,
-                               @RequestParam("role") String role,
-                               Model model) {
+//    @PostMapping("/submit-answer")
+//    public String submitAnswer(@RequestParam("flashcardIds[]") Long[] flashcardIds,
+//                               @RequestParam("userAnswer[]") String[] userAnswers,
+//                               @RequestParam(value = "questionIndex", defaultValue = "0") int questionIndex,
+//                               @RequestParam("topicId") Long topicId,
+//                               @RequestParam("role") String role,
+//                               Model model) {
+//
+//        int totalScore = 0; //variabel utk hitung total score
+//        int incorrectAnswers = 0;
+//
+//        // Debugging log untuk memastikan nilai yang diteruskan
+//        System.out.println("topicId: " + topicId);
+//        System.out.println("questionIndex: " + questionIndex);
+//
+//
+//        // Cek panjang array jawaban dan ID flashcard
+//        if (flashcardIds.length != userAnswers.length) {
+//            model.addAttribute("error", "Jumlah soal dan jawaban tidak cocok.");
+//            return "error_page";  // Tampilkan halaman error jika ada masalah dengan data
+//        }
+//
+//        for (int i = 0; i < flashcardIds.length; i++) {
+//            Long flashcardId = flashcardIds[i];
+//            String userAnswer = userAnswers[i];
+//
+//            // Proses setiap flashcard dan jawaban yang diterima
+//            Flashcard flashcard = flashcardRepository.findById(flashcardId)
+//                    .orElseThrow(() -> new IllegalArgumentException("Invalid flashcard Id"));
+//
+//            boolean correct = flashcard.getAnswer().equals(userAnswer);
+//
+//            if (correct) {
+//                totalScore++;  // Tambah skor jika jawaban benar
+//            }
+//
+//            // Tambahkan logika untuk memproses jawaban (misalnya menambah skor)
+//            model.addAttribute("correct", totalScore > 0);
+//            model.addAttribute("score", totalScore);
+//            model.addAttribute("flashcards", flashcard); // Kirim soal yang dijawab ke model
+//
+//        }
+//
+//        // Lanjutkan logika untuk mengarahkan ke soal berikutnya atau dashboard
+//        return "redirect:/quiz_page?topicId=" + topicId + "&questionIndex=" + (questionIndex + 1);
+//    }
+@PostMapping("/submit-answer")
+public String submitAnswer(@RequestParam("flashcardIds[]") Long[] flashcardIds,
+                           @RequestParam("userAnswer[]") String[] userAnswers,
+                           @RequestParam(value = "questionIndex", defaultValue = "0") int questionIndex,
+                           @RequestParam("topicId") Long topicId,
+                           HttpSession session,
+                           Model model) {
 
-        int totalScore = 0; //variabel utk hitung total score
+    int correctAnswers = 0;
+    int incorrectAnswers = 0;
 
-        // Debugging log untuk memastikan nilai yang diteruskan
-        System.out.println("topicId: " + topicId);
-        System.out.println("questionIndex: " + questionIndex);
-
-
-        // Cek panjang array jawaban dan ID flashcard
-        if (flashcardIds.length != userAnswers.length) {
-            model.addAttribute("error", "Jumlah soal dan jawaban tidak cocok.");
-            return "error_page";  // Tampilkan halaman error jika ada masalah dengan data
-        }
-
-        for (int i = 0; i < flashcardIds.length; i++) {
-            Long flashcardId = flashcardIds[i];
-            String userAnswer = userAnswers[i];
-
-            // Proses setiap flashcard dan jawaban yang diterima
-            Flashcard flashcard = flashcardRepository.findById(flashcardId)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid flashcard Id"));
-
-            boolean correct = flashcard.getAnswer().equals(userAnswer);
-
-            if (correct) {
-                totalScore++;  // Tambah skor jika jawaban benar
-            }
-
-            // Tambahkan logika untuk memproses jawaban (misalnya menambah skor)
-            model.addAttribute("correct", totalScore > 0);
-            model.addAttribute("score", totalScore);
-            model.addAttribute("flashcards", flashcard); // Kirim soal yang dijawab ke model
-
-        }
-
-        // Lanjutkan logika untuk mengarahkan ke soal berikutnya atau dashboard
-        return "redirect:/quiz_page?topicId=" + topicId + "&questionIndex=" + (questionIndex + 1);
+    if (flashcardIds.length != userAnswers.length) {
+        model.addAttribute("error", "Jumlah soal dan jawaban tidak cocok.");
+        return "error_page";
     }
 
+    for (int i = 0; i < flashcardIds.length; i++) {
+        Long flashcardId = flashcardIds[i];
+        String userAnswer = userAnswers[i];
 
-    @GetMapping("/quiz_result")
-    public String quizResult(@RequestParam("topicId") Long topicId, Model model) {
-        // Menangani topik quiz berdasarkan topicId
-        TopikQuiz topic = topicQuizRepository.findById(topicId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid topic Id"));
+        Flashcard flashcard = flashcardRepository.findById(flashcardId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid flashcard Id"));
 
-        model.addAttribute("topicName", topic.getName()); // Kirimkan nama topik ke model
+        // Memeriksa jawaban
+        boolean correct = flashcard.getAnswer().equalsIgnoreCase(userAnswer);
 
-        return "quiz_result"; // Tampilkan halaman quiz_result
+        if (correct) {
+            correctAnswers++;
+        } else {
+            incorrectAnswers++;
+        }
     }
+
+    // Menyimpan hasil ke session
+    session.setAttribute("correctAnswers", correctAnswers);
+    session.setAttribute("incorrectAnswers", incorrectAnswers);
+
+    // Cek jika soal sudah selesai
+    long totalQuestions = flashcardRepository.countByTopikQuizId(topicId);
+    if (questionIndex + 1 >= totalQuestions) {
+        model.addAttribute("correctAnswers", correctAnswers);
+        model.addAttribute("incorrectAnswers", incorrectAnswers);
+        return "quiz_result";  // Tampilkan halaman hasil quiz
+    }
+
+    // Lanjutkan ke soal berikutnya
+    return "redirect:/quiz_page?topicId=" + topicId + "&questionIndex=" + (questionIndex + 1);
+}
+
+
+//    @GetMapping("/quiz_result")
+//    public String quizResult(@RequestParam("topicId") Long topicId, Model model) {
+//        // Menangani topik quiz berdasarkan topicId
+//        TopikQuiz topic = topicQuizRepository.findById(topicId)
+//                .orElseThrow(() -> new IllegalArgumentException("Invalid topic Id"));
+//
+//        model.addAttribute("topicName", topic.getName()); // Kirimkan nama topik ke model
+//
+//        return "quiz_result"; // Tampilkan halaman quiz_result
+//    }
 
 
 }
