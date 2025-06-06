@@ -5,6 +5,7 @@ import com.tubes.studypop.model.Flashcard;
 import com.tubes.studypop.repository.FlashcardRepository;
 import com.tubes.studypop.service.Quiz;
 import com.tubes.studypop.repository.TopicQuizRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,30 +44,30 @@ public class QuizController {
                            Model model) {
 
         try {
-        // Debugging log untuk melihat nilai yang diterima
-        System.out.println("Received topicId: " + topicId);
-        System.out.println("Received questionIndex: " + questionIndex);
+            // Debugging log untuk melihat nilai yang diterima
+            System.out.println("Received topicId: " + topicId);
+            System.out.println("Received questionIndex: " + questionIndex);
 
-        // Mengambil topik quiz berdasarkan ID
-        TopikQuiz topic = topicQuizRepository.findById(topicId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid topic Id"));
+            // Mengambil topik quiz berdasarkan ID
+            TopikQuiz topic = topicQuizRepository.findById(topicId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid topic Id"));
 
-        // Mengambil soal (flashcard) terkait dengan topik
-        List<Flashcard> flashcards = flashcardRepository.findByTopikQuizId(topicId);
+            // Mengambil soal (flashcard) terkait dengan topik
+            List<Flashcard> flashcards = flashcardRepository.findByTopikQuizId(topicId);
 
-        // Pastikan index tidak melebihi jumlah soal
-        if (questionIndex >= flashcards.size()) {
-            return "quiz_result"; // Halaman selesai jika soal sudah habis
-        }
+            // Pastikan index tidak melebihi jumlah soal
+            if (questionIndex >= flashcards.size()) {
+                return "quiz_result"; // Halaman selesai jika soal sudah habis
+            }
 
-        // Ambil soal berdasarkan index
-        Flashcard flashcard = flashcards.get(questionIndex);
+            // Ambil soal berdasarkan index
+            Flashcard flashcard = flashcards.get(questionIndex);
 
-        // Menambahkan soal ke model
-        model.addAttribute("flashcard", flashcard);  // Mengirimkan soal
-        model.addAttribute("topicName", topic.getName());  // Mengirimkan nama topik
-        model.addAttribute("topicId", topicId);  // Menambahkan ID topik ke model
-        model.addAttribute("questionIndex", questionIndex); // Menambahkan index soal ke model
+            // Menambahkan soal ke model
+            model.addAttribute("flashcard", flashcard);  // Mengirimkan soal
+            model.addAttribute("topicName", topic.getName());  // Mengirimkan nama topik
+            model.addAttribute("topicId", topicId);  // Menambahkan ID topik ke model
+            model.addAttribute("questionIndex", questionIndex); // Menambahkan index soal ke model
         } catch (Exception e) {
             // Log error yang lebih detail
             System.out.println("Error occurred: " + e.getMessage());
@@ -84,6 +85,8 @@ public class QuizController {
                                @RequestParam("topicId") Long topicId,
                                @RequestParam("role") String role,
                                Model model) {
+
+        int totalScore = 0; //variabel utk hitung total score
 
         // Debugging log untuk memastikan nilai yang diteruskan
         System.out.println("topicId: " + topicId);
@@ -106,13 +109,32 @@ public class QuizController {
 
             boolean correct = flashcard.getAnswer().equals(userAnswer);
 
+            if (correct) {
+                totalScore++;  // Tambah skor jika jawaban benar
+            }
+
             // Tambahkan logika untuk memproses jawaban (misalnya menambah skor)
-            model.addAttribute("correct", correct);
-            model.addAttribute("score", correct ? 1 : 0);
+            model.addAttribute("correct", totalScore > 0);
+            model.addAttribute("score", totalScore);
+            model.addAttribute("flashcards", flashcard); // Kirim soal yang dijawab ke model
+
         }
 
         // Lanjutkan logika untuk mengarahkan ke soal berikutnya atau dashboard
         return "redirect:/quiz_page?topicId=" + topicId + "&questionIndex=" + (questionIndex + 1);
     }
+
+
+    @GetMapping("/quiz_result")
+    public String quizResult(@RequestParam("topicId") Long topicId, Model model) {
+        // Menangani topik quiz berdasarkan topicId
+        TopikQuiz topic = topicQuizRepository.findById(topicId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid topic Id"));
+
+        model.addAttribute("topicName", topic.getName()); // Kirimkan nama topik ke model
+
+        return "quiz_result"; // Tampilkan halaman quiz_result
+    }
+
 
 }
