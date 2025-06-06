@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Page</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="quiz-container">
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>StudyPop</h2>
+        </div>
+        <ul class="menu">
+            <li><a href="/login">Logout</a></li>
+        </ul>
+
+    <h1>Mulai Kuis</h1>
+    <p>Silahkan pilih kuis yang mau anda kerjakan!</p>
+
+    <div class="action-buttons">
+        <a href="/start-quiz?topicId=1"> <button class="start-quiz-btn">Mulai Kuis</button></a>
+        <button class="add-question-btn">Tambah Soal</button>
+        <button class="view-results-btn">Lihat Hasil</button>
+    </div>
+
+        <!-- form untuk menampilkan soal -->
+        <form action="/submit-answer" method="post">
+            <div th:each="flashcard : ${flashcards}">
+                <div class="flashcard">
+                    <p th:text="'Question: ' + ${flashcard.question}"></p>
+                    <!-- Input untuk jawaban -->
+                    <input type="text" name="userAnswer" placeholder="Masukkan jawabanmu di sini" required>
+                    <!-- Menyimpan ID flashcard yang terkait dengan soal ini -->
+                    <input type="hidden" name="flashcardId" th:value="${flashcard.id}">
+                </div>
+            </div>
+
+            <button type="submit">Submit Answers</button>
+        </form>
+
+    <!-- Admin-only options (if role is admin) -->
+    <div th:if="${role == 'admin'}" class="admin-actions">
+        <h2>Admin Actions</h2>
+        <a href="/add-quiz">Add New Quiz</a><br>
+        <a href="/delete-quiz">Delete Quiz</a>
+    </div>
+    </div>
+</div>
+</body>
+</html>

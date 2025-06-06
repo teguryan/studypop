@@ -1,0 +1,91 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.quiz-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.quiz-container h1 {
+    font-size: 32px;
+    color: #333;
+    text-align: center;
+}
+
+.quiz-container p {
+    font-size: 18px;
+    color: #555;
+    text-align: center;
+}
+
+.flashcard {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.flashcard p {
+    font-size: 18px;
+    color: #333;
+}
+
+.flashcard input[type="text"] {
+    padding: 12px;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+.flashcard input[type="text"]:focus {
+    outline-color: #4CAF50;
+}
+
+button {
+    padding: 15px;
+    width: 100%;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.admin-actions {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.admin-actions a {
+    color: #4CAF50;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.admin-actions a:hover {
+    text-decoration: underline;
+}
