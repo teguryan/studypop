@@ -1,6 +1,8 @@
 package com.tubes.studypop.model;
 
+
 import jakarta.persistence.*;
+
 
 @Entity
 public class Flashcard {
@@ -59,3 +61,4 @@ public class Flashcard {
 
 
 }
+

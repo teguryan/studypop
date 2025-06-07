@@ -4,9 +4,11 @@ import com.tubes.studypop.model.Flashcard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface FlashcardRepository extends JpaRepository<Flashcard, Long> {
     List<Flashcard> findByTopikQuizId(Long topikQuizId);  // Mencari flashcard berdasarkan topik quiz ID
 
@@ -14,3 +16,4 @@ public interface FlashcardRepository extends JpaRepository<Flashcard, Long> {
     @Query("SELECT COUNT(f) FROM Flashcard f WHERE f.topikQuiz.id = :topicQuizId")
     long countByTopikQuizId(@Param("topicQuizId") Long topicQuizId);
 }
+
