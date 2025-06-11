@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Rekap Hasil Kuis</title>
+</head>
+<body>
+<h1>Rekap Hasil Kuis</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>No</th>
+        <th>Topik</th>
+        <th>Soal</th>
+        <th>Jawaban</th>
+        <th>Benar / Salah</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="result, iter : ${results}">
+        <td th:text="${iter.index + 1}"></td>
+        <td th:text="${result.flashcard.topikQuiz.name}"></td>
+        <td th:text="${result.flashcard.question}"></td>
+        <td th:text="${result.studentAnswer}"></td>
+        <td th:text="${result.isCorrect ? 'Benar' : 'Salah'}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/admin_dashboard">Kembali ke Dashboard</a>
+</body>
+</html>

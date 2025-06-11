@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tambah Flashcard</title>
+</head>
+<body>
+<h1>Tambah Flashcard</h1>
+
+<form th:action="@{/admin/flashcards/add}" method="post" th:object="${flashcard}">
+    <label>Pertanyaan:</label>
+    <input type="text" th:field="*{question}" required /><br><br>
+
+    <label>Jawaban:</label>
+    <input type="text" th:field="*{answer}" required /><br><br>
+
+    <label>Topik:</label>
+    <select name="topikId">
+        <option th:each="topic : ${topics}"
+                th:value="${topic.id}"
+                th:text="${topic.name}">
+        </option>
+    </select><br><br>
+
+    <button type="submit">Simpan</button>
+</form>
+
+<a href="/admin/flashcards">Kembali</a>
+</body>
+</html>

@@ -1,183 +1,284 @@
-/* Basic Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
-/* Body Styling */
-body {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 700;
-    background-color: #f7f9fc;
-    display: flex;
-    height: 100vh;
-    margin: 0;
-    justify-content: center; /* Center the content horizontally */
-    align-items: center; /* Center the content vertically */
-}
+/** {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    box-sizing: border-box;*/
+/*}*/
 
-.quiz-container {
-    display: flex;
-    width: 100%;
-    height: 100%;
-}
+/*body {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    background-color: #f7f9fc;*/
+/*    display: flex;*/
+/*    height: 100vh;*/
+/*    margin: 0;*/
+/*}*/
 
-/* Sidebar */
-.sidebar {
-    width: 250px;
-    background-color: #9cc97f;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px;
-    box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.1);
-}
+/*.quiz-container {*/
+/*    display: flex;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*}*/
 
-.sidebar-header h2 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 28px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 30px;
-    color: #fff;
-}
+/*!* Sidebar Styling - Konsisten dengan design sebelumnya *!*/
+/*.sidebar {*/
+/*    width: 280px;*/
+/*    background: linear-gradient(135deg, #9cc97f 0%, #7fb069 100%);*/
+/*    color: #fff;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    padding: 30px 25px;*/
+/*    box-shadow: 4px 0px 20px rgba(0, 0, 0, 0.1);*/
+/*    position: fixed;*/
+/*    height: 100vh;*/
+/*    z-index: 1000;*/
+/*}*/
 
-.menu {
-    list-style: none;
-    padding: 0;
-}
+/*.sidebar-header h2 {*/
+/*    font-size: 28px;*/
+/*    font-weight: 700;*/
+/*    margin-bottom: 50px;*/
+/*    text-align: center;*/
+/*    letter-spacing: -0.5px;*/
+/*}*/
 
-.menu li {
-    margin-bottom: 20px;
-}
+/*.menu {*/
+/*    list-style: none;*/
+/*    margin-top: auto;*/
+/*}*/
 
-.menu a {
-    font-family: Poppins, sans-serif;
-    text-decoration: none;
-    font-size: 20px;
-    color: #fff;
-    font-weight: 500;
-    transition: color 0.3s;
-}
+/*.menu li {*/
+/*    margin-bottom: 10px;*/
+/*}*/
 
-.menu a:hover {
-    color: #FFD700;
-}
+/*.menu a {*/
+/*    background: rgba(255, 255, 255, 0.15);*/
+/*    border: 2px solid rgba(255, 255, 255, 0.3);*/
+/*    color: white;*/
+/*    padding: 14px 20px;*/
+/*    border-radius: 12px;*/
+/*    cursor: pointer;*/
+/*    font-size: 16px;*/
+/*    font-weight: 600;*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    transition: all 0.3s ease;*/
+/*    text-decoration: none;*/
+/*    text-align: center;*/
+/*    display: block;*/
+/*    backdrop-filter: blur(10px);*/
+/*}*/
 
-/* Main Content Area (Right Side of the Sidebar) */
-.main-content {
-    flex-grow: 1;
-    background-color: #fff;
-    padding: 40px;
-    overflow-y: auto;
-}
+/*.menu a:hover {*/
+/*    background: rgba(255, 255, 255, 0.25);*/
+/*    border-color: rgba(255, 255, 255, 0.5);*/
+/*    transform: translateY(-2px);*/
+/*}*/
 
-.main-content-header {
-    text-align: center;
-    margin-bottom: 40px;
-}
+/*!* Main Content *!*/
+/*.main-content {*/
+/*    margin-left: 280px;*/
+/*    flex-grow: 1;*/
+/*    background-color: #ffffff;*/
+/*    padding: 50px 60px;*/
+/*    overflow-y: auto;*/
+/*    min-height: 100vh;*/
+/*}*/
 
-.main-content-header h2 {
-    font-family: Poppins, sans-serif;
-    font-size: 32px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
-}
+/*.main-content-header {*/
+/*    text-align: center;*/
+/*    margin-bottom: 50px;*/
+/*}*/
 
-/* Styling untuk Flashcard Container */
-.flashcard-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 30px;
-    background-color: #f1f5f8;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    text-align: center;
-}
+/*.main-content-header h2 {*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-size: 36px;*/
+/*    font-weight: 700;*/
+/*    color: #2c3e50;*/
+/*    margin-bottom: 12px;*/
+/*    letter-spacing: -0.5px;*/
+/*}*/
 
-/* Styling untuk Flashcard (Kotak Soal) */
-.flashcard {
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    margin-bottom: 20px; /* Add space between questions */
-}
+/*!* Flashcard Container *!*/
+/*.flashcard-container {*/
+/*    max-width: 800px;*/
+/*    margin: 0 auto;*/
+/*}*/
 
-/* Efek hover pada Flashcard */
-.flashcard:hover {
-    transform: scale(1.05);
-}
+/*.flashcard {*/
+/*    background: #ffffff;*/
+/*    border-radius: 20px;*/
+/*    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);*/
+/*    padding: 40px;*/
+/*    margin-bottom: 30px;*/
+/*    border: 1px solid #e8ecef;*/
+/*    transition: all 0.3s ease;*/
+/*}*/
 
-/* Styling untuk Soal (Pertanyaan) */
-.flashcard .question {
-    font-family: Poppins, sans-serif;
-    font-size: 18px;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
+/*.flashcard:hover {*/
+/*    transform: translateY(-5px);*/
+/*    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);*/
+/*}*/
 
-/* Styling untuk Input Jawaban (optional, jika digunakan) */
-.flashcard input[type="text"] {
-    font-family: Poppins, sans-serif;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
+/*.question {*/
+/*    font-size: 24px;*/
+/*    font-weight: 600;*/
+/*    color: #2c3e50;*/
+/*    margin-bottom: 30px;*/
+/*    text-align: center;*/
+/*    line-height: 1.4;*/
+/*}*/
 
-/* Tombol Submit dan Next */
-button[type="submit"] {
-    font-family: Poppins, sans-serif;
-    padding: 10px 20px;
-    background-color: #9cc97f;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-right: 10px;
-}
+/*!* Input Field Styling *!*/
+/*input[type="text"] {*/
+/*    width: 100%;*/
+/*    padding: 16px 20px;*/
+/*    border: 2px solid #e1e8ed;*/
+/*    border-radius: 12px;*/
+/*    font-size: 16px;*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    font-weight: 500;*/
+/*    color: #2c3e50;*/
+/*    background: #f8fafe;*/
+/*    transition: all 0.3s ease;*/
+/*    margin-bottom: 20px;*/
+/*}*/
 
-button[type="submit"]:hover {
-    background-color: #45a049;
-}
+/*input[type="text"]:focus {*/
+/*    outline: none;*/
+/*    border-color: #9cc97f;*/
+/*    background: #ffffff;*/
+/*    box-shadow: 0 0 0 4px rgba(156, 201, 127, 0.1);*/
+/*}*/
 
-button.next-btn {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+/*input[type="text"]::placeholder {*/
+/*    color: #95a5a6;*/
+/*    font-style: italic;*/
+/*}*/
 
-button.next-btn:hover {
-    background-color: #0056b3;
-}
+/*!* Submit Button *!*/
+/*button[type="submit"] {*/
+/*    width: 100%;*/
+/*    max-width: 300px;*/
+/*    margin: 40px auto 0;*/
+/*    display: block;*/
+/*    background: linear-gradient(135deg, #9cc97f 0%, #7fb069 100%);*/
+/*    color: white;*/
+/*    border: none;*/
+/*    padding: 18px 30px;*/
+/*    border-radius: 12px;*/
+/*    font-size: 18px;*/
+/*    font-weight: 600;*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    cursor: pointer;*/
+/*    transition: all 0.3s ease;*/
+/*    box-shadow: 0 8px 25px rgba(156, 201, 127, 0.3);*/
+/*}*/
 
-/* Styling untuk Admin Actions */
-.admin-actions {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-}
+/*button[type="submit"]:hover {*/
+/*    background: linear-gradient(135deg, #7fb069 0%, #6a9c57 100%);*/
+/*    transform: translateY(-3px);*/
+/*    box-shadow: 0 12px 35px rgba(156, 201, 127, 0.4);*/
+/*}*/
 
-.admin-actions a {
-    display: block;
-    color: #007bff;
-    text-decoration: none;
-    margin: 10px 0;
-}
+/*button[type="submit"]:active {*/
+/*    transform: translateY(-1px);*/
+/*}*/
 
-.admin-actions a:hover {
-    text-decoration: underline;
-}
+/*!* Admin Actions *!*/
+/*.admin-actions {*/
+/*    margin-top: 60px;*/
+/*    padding: 30px;*/
+/*    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);*/
+/*    border-radius: 16px;*/
+/*    border: 1px solid #dee2e6;*/
+/*    max-width: 800px;*/
+/*    margin-left: auto;*/
+/*    margin-right: auto;*/
+/*}*/
+
+/*.admin-actions h2 {*/
+/*    font-size: 24px;*/
+/*    font-weight: 600;*/
+/*    color: #495057;*/
+/*    margin-bottom: 20px;*/
+/*    text-align: center;*/
+/*}*/
+
+/*.admin-actions a {*/
+/*    display: inline-block;*/
+/*    margin: 10px 15px;*/
+/*    padding: 12px 24px;*/
+/*    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);*/
+/*    color: white;*/
+/*    text-decoration: none;*/
+/*    border-radius: 8px;*/
+/*    font-weight: 500;*/
+/*    transition: all 0.3s ease;*/
+/*}*/
+
+/*.admin-actions a:hover {*/
+/*    background: linear-gradient(135deg, #495057 0%, #343a40 100%);*/
+/*    transform: translateY(-2px);*/
+/*    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);*/
+/*}*/
+
+/*!* Hidden inputs *!*/
+/*input[type="hidden"] {*/
+/*    display: none;*/
+/*}*/
+
+/*!* Responsive Design *!*/
+/*@media (max-width: 768px) {*/
+/*    .sidebar {*/
+/*        width: 100%;*/
+/*        height: auto;*/
+/*        position: relative;*/
+/*    }*/
+
+/*    .main-content {*/
+/*        margin-left: 0;*/
+/*        padding: 30px 20px;*/
+/*    }*/
+
+/*    .main-content-header h2 {*/
+/*        font-size: 28px;*/
+/*    }*/
+
+/*    .flashcard {*/
+/*        padding: 30px 20px;*/
+/*    }*/
+
+/*    .question {*/
+/*        font-size: 20px;*/
+/*    }*/
+
+/*    input[type="text"] {*/
+/*        padding: 14px 16px;*/
+/*        font-size: 14px;*/
+/*    }*/
+
+/*    button[type="submit"] {*/
+/*        padding: 16px 24px;*/
+/*        font-size: 16px;*/
+/*    }*/
+/*}*/
+
+/*!* Animation for smooth entrance *!*/
+/*.flashcard {*/
+/*    animation: slideInUp 0.6s ease-out;*/
+/*}*/
+
+/*@keyframes slideInUp {*/
+/*    from {*/
+/*        opacity: 0;*/
+/*        transform: translateY(30px);*/
+/*    }*/
+/*    to {*/
+/*        opacity: 1;*/
+/*        transform: translateY(0);*/
+/*    }*/
+/*}*/
+
+/*!* Form styling *!*/
+/*form {*/
+/*    width: 100%;*/
+/*}*/

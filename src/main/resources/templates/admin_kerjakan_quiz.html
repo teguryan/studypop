@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Kerjakan Quiz - Admin</title>
+</head>
+<body>
+<h1>Kerjakan Quiz</h1>
+
+<!-- Pilih topik quiz -->
+<form th:action="@{/admin/kerjakan_quiz}" method="get">
+    <label for="topikId">Pilih Topik:</label>
+    <select name="topikId" id="topikId">
+        <option th:each="topic : ${topics}"
+                th:value="${topic.id}"
+                th:text="${topic.name}">
+        </option>
+    </select>
+
+    <!-- Preserve userId when selecting topic -->
+    <input type="hidden" th:value="${user?.id}" name="userId" th:if="${user}">
+
+    <button type="submit">Pilih</button>
+</form>
+
+<!-- Tampilkan soal flashcard berdasarkan topik yang dipilih -->
+<div th:if="${flashcards}">
+    <form th:action="@{/admin/kerjakan_quiz/{topikId}(topikId=${topik.id})}" method="post">
+        <h2>Topik: <span th:text="${topik.name}"></span></h2>
+
+        <div th:each="flashcard : ${flashcards}">
+            <p><strong th:text="${flashcard.question}"></strong></p>
+            <input type="text" th:name="'answers[' + ${flashcard.id} + ']'" placeholder="Jawaban Anda" required /><br><br>
+        </div>
+
+        <!-- Menyertakan userId sebagai input hidden -->
+        <input type="hidden" th:value="${user.id}" name="userId">
+
+        <!-- Tombol submit -->
+        <button type="submit">Kirim Jawaban</button>
+
+    </form>
+</div>
+
+</body>
+</html>

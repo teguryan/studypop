@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Topik Quiz</title></head>
+<body>
+    <h1>Daftar Topik Quiz</h1>
+
+    <a href="/admin/topics/add">
+        <button>Tambah Topik</button>
+    </a>
+
+    <table border="1">
+        <tr>
+            <th>No</th>
+            <th>Nama Topik</th>
+        </tr>
+        <tr th:each="topic, iter : ${topics}">
+            <td th:text="${iter.count}">1</td>
+            <td th:text="${topic.name}">Topik</td>
+        </tr>
+    </table>
+
+    <a th:href="@{/admin_dashboard(userId=${user.id})}">
+        <button>Kembali ke Dashboard</button>
+    </a>
+</body>
+</html>
+
+/admin/flashcards
+<!--@{/admin_dashboard(userId=${user.id})}-->

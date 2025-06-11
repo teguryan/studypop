@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Statistik Kuis</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+        .stats-summary {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .stats-summary p { margin: 5px 0; font-size: 16px; }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover { background-color: #0056b3; }
+        .accuracy-high { color: #28a745; font-weight: bold; }
+        .accuracy-medium { color: #ffc107; font-weight: bold; }
+        .accuracy-low { color: #dc3545; font-weight: bold; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        tr:hover { background-color: #f5f5f5; }
+    </style>
+</head>
+<body>
+<h1>Statistik Kuis Global</h1>
+
+<!-- Statistik Umum -->
+<div class="stats-summary">
+    <p><strong>Total Jawaban:</strong> <span th:text="${totalAnswered}">0</span></p>
+    <p><strong>Jawaban Benar:</strong> <span th:text="${correctAnswers}">0</span></p>
+    <p><strong>Akurasi Keseluruhan:</strong> <span th:text="${#numbers.formatDecimal(accuracy, 1, 2)}">0</span>%</p>
+</div>
+
+<h2>Ringkasan Hasil Kuis per Siswa</h2>
+
+<!-- Cek jika data kosong -->
+<div th:if="${#lists.isEmpty(userTopicSummaries)}" class="error">
+    <p>Tidak ada data hasil kuis ditemukan!</p>
+</div>
+
+<table th:if="${!#lists.isEmpty(userTopicSummaries)}">
+    <thead>
+    <tr>
+        <th>Nama Pengguna</th>
+        <th>Topik</th>
+        <th>Akurasi</th>
+        <th>Aksi</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="summary : ${userTopicSummaries}">
+        <!-- Nama Pengguna -->
+        <td th:text="${summary.user.username}">Username</td>
+
+        <!-- Topik -->
+        <td th:text="${summary.topic.name}">Topic</td>
+
+        <!-- Akurasi dengan warna berdasarkan persentase -->
+        <td>
+            <span th:if="${summary.accuracy >= 80}"
+                  th:text="${#numbers.formatDecimal(summary.accuracy, 1, 2)} + '%'"
+                  class="accuracy-high">80%</span>
+            <span th:if="${summary.accuracy >= 60 && summary.accuracy < 80}"
+                  th:text="${#numbers.formatDecimal(summary.accuracy, 1, 2)} + '%'"
+                  class="accuracy-medium">60%</span>
+            <span th:if="${summary.accuracy < 60}"
+                  th:text="${#numbers.formatDecimal(summary.accuracy, 1, 2)} + '%'"
+                  class="accuracy-low">40%</span>
+            <small th:text="'(' + ${summary.correctAnswers} + '/' + ${summary.totalAnswers} + ')'">(0/0)</small>
+        </td>
+
+        <!-- Aksi -->
+        <td>
+            <a th:href="@{/admin/quiz_results_detail(userId=${summary.user.id}, topikId=${summary.topic.id})}">
+                <button>Lihat Detail</button>
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -30,17 +30,14 @@
         <br>
 
         <div class="action-card">
-            <div class="cards">
-                <h3>Tambah Flashcard</h3>
-                <div class="action-buttons">
-                    <button class="add-quiz-btn">Tambah</button>
-                </div>
-            </div>
+
             <div class="cards">
                 <div class="content">
                     <h3>Lihat Flashcard</h3>
-                    <div class="action-buttons">
-                        <button class="see-quiz-btn">Lihat</button>
+                    <div th:if="${user.role == 'admin'}" class="action-buttons">
+                        <a href="/admin/flashcards">
+                            <button>Lihat</button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -49,7 +46,7 @@
                 <div class="content">
                     <h3>Kerjakan Quiz</h3>
                     <div class="action-buttons">
-                        <a href="quiz_page.html?role=admin">
+                        <a href="/admin/kerjakan_quiz">
                             <button class="do-quiz-btn">Kerjakan</button>
                         </a>
                     </div>
@@ -58,26 +55,17 @@
 
             <div class="cards">
                 <div class="content">
-                    <h3>Hapus Flashcard</h3>
-                        <div class="action-buttons">
-                            <button class="del-quiz-btn">Hapus</button>
-                        </div>
-                </div>
-            </div>
-
-            <div class="cards">
-                <div class="content">
                     <h3>Lihat Statistik</h3>
                     <div class="action-buttons">
-                        <button class="seestat-quiz-btn">Lihat aku!</button>
+                        <a href="/admin_quiz_statistic">
+                            <button class="seestat-quiz-btn">Lihat aku!</button>
+                        </a>
                     </div>
                 </div>
             </div>
 
-
         </div>
     </div>
-
 </div>
 </body>
 </html>

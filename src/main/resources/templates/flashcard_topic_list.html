@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pilih Topik Flashcard</title>
+</head>
+<body>
+<h1>Pilih Topik untuk Flashcard</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>No</th>
+        <th>Topik</th>
+        <th>Aksi</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="topic, iter : ${topics}">
+        <td th:text="${iter.count}">1</td>
+        <td th:text="${topic.name}">Topik</td>
+        <td>
+            <a th:href="@{/flashcards(topikId=${topic.id}, userId=${userId})}">
+                <button>Lihat</button>
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/student_dashboard(userId=${userId})}">Kembali ke Dashboard</a>
+</body>
+</html>

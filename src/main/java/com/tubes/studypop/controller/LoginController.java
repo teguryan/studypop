@@ -40,7 +40,8 @@ public class LoginController {
                 return "admin_dashboard";  // Ganti dengan halaman dashboard admin
             } else if ("student".equalsIgnoreCase(user.getRole())) {
                 // Jika role student, tampilkan tampilan student
-                return "student_dashboard";  // Ganti dengan halaman dashboard student
+//                return "student_dashboard";  // Ganti dengan halaman dashboard student
+                return "redirect:/student_dashboard?userId=" + user.getId();
             } else {
                 // Default: Jika role tidak sesuai, kembali ke login dengan error
                 model.addAttribute("error", "Invalid role.");

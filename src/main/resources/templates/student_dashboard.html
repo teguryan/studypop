@@ -4,37 +4,278 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student - Halaman Utama</title>
-    <link rel="stylesheet" href="/css/student_dashboard.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f9fc;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styling - Sama seperti halaman statistik */
+        .sidebar {
+            width: 250px;
+            background-color: #9cc97f;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100vh;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .welcome {
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Content Container */
+        .profile-container {
+            flex: 1;
+            margin-left: 280px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-content {
+            padding: 40px;
+            flex: 1;
+        }
+
+        /* Header Styling */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .profile-header h2 {
+            font-size: 36px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .profile-header p {
+            font-size: 20px;
+            color: #666;
+            font-weight: 400;
+        }
+
+        /* Action Cards Container */
+        .action-card {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Individual Cards */
+        .cards {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(156, 201, 127, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cards::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #9cc97f;
+        }
+
+        .cards:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(156, 201, 127, 0.2);
+        }
+
+        .cards h3 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            margin-top: 20px;
+        }
+
+        .action-buttons a {
+            text-decoration: none;
+        }
+
+        .action-buttons button {
+            background: #9cc97f;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            min-width: 180px;
+            box-shadow: 0 4px 15px rgba(156, 201, 127, 0.3);
+        }
+
+        .action-buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(156, 201, 127, 0.4);
+            background-color: #8bb86a;
+        }
+
+        .action-buttons button:active {
+            transform: translateY(0);
+        }
+
+        /* Special styling for different card types */
+        .cards:nth-child(1) {
+            background: linear-gradient(145deg, #fff 0%, #f8fff8 100%);
+        }
+
+        .cards:nth-child(2) {
+            background: linear-gradient(145deg, #fff 0%, #f8f9ff 100%);
+        }
+
+        .cards:nth-child(3) {
+            background: linear-gradient(145deg, #fff 0%, #fff8f8 100%);
+        }
+
+        /* Add icons to cards */
+        .cards:nth-child(1) h3::before {
+            content: "🃏";
+            display: block;
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .cards:nth-child(2) h3::before {
+            content: "📝";
+            display: block;
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .cards:nth-child(3) h3::before {
+            content: "📊";
+            display: block;
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 20px;
+            }
+
+            .profile-container {
+                margin-left: 0;
+            }
+
+            .profile-content {
+                padding: 20px;
+            }
+
+            .profile-header h2 {
+                font-size: 28px;
+            }
+
+            .profile-header p {
+                font-size: 18px;
+            }
+
+            .action-card {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .cards {
+                padding: 30px 20px;
+            }
+
+            .cards h3 {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="profile-container">
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h2>StudyPop</h2>
-        </div>
-        <ul class="menu">
-            <li><a href="/login">Logout</a></li>
-        </ul>
+<!-- Sidebar - Sama seperti halaman statistik -->
+<div class="sidebar">
+    <div class="sidebar-top">
+        <div class="logo">StudyPop</div>
+        <div class="welcome">Welcome, student!</div>
     </div>
+    <a href="/logout" class="logout-btn">Logout</a>
+</div>
 
+<!-- Main Content -->
+<div class="profile-container">
     <div class="profile-content">
         <div class="profile-header">
-            <h2>Welcome, Student!</h2>
-            <p>Mau ngapain apa hari ini?</p>
+            <h2>Mau ngapain  hari ini?</h2>
         </div>
-
-        <br>
-        <br>
 
         <div class="action-card">
             <div class="cards">
                 <div class="content">
                     <h3>Flashcard</h3>
                     <div class="action-buttons">
-                        <button class="see-quiz-btn">Lihat</button>
+                        <a th:href="@{/flashcard_topics(userId=${user.id})}">
+                            <button>Lihat Flashcard</button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -43,7 +284,7 @@
                 <div class="content">
                     <h3>Quiz</h3>
                     <div class="action-buttons">
-                        <a href="/choose_topic">
+                        <a th:href="@{/choose_topic(userId=${user.id})}">
                             <button class="do-quiz-btn">Pilih Topik Quiz</button>
                         </a>
                     </div>
@@ -54,15 +295,14 @@
                 <div class="content">
                     <h3>Statistik</h3>
                     <div class="action-buttons">
-                        <button class="do-quiz-btn">Lihat</button>
+                        <a th:href="@{/statistik(userId=${user.id})}">
+                            <button>Lihat Statistik</button>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 </body>
 </html>
-
-

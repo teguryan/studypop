@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Flashcards</title>
+    <link rel="stylesheet" href="/css/flashcard.css">
+</head>
+<body>
+<div class="flashcard-container">
+    <h1>Flashcard Topik: <span th:text="${topik.name}">Nama Topik</span></h1>
+
+    <div th:each="flashcard : ${flashcards}" class="flashcard">
+        <p><strong>Pertanyaan:</strong> <span th:text="${flashcard.question}"></span></p>
+        <p><strong>Jawaban:</strong> <span th:text="${flashcard.answer}"></span></p>
+        <hr>
+    </div>
+
+    <a th:href="@{/flashcard_topics(userId=${userId})}">Kembali ke Pilihan Topik</a>
+
+    <a th:href="@{/student_dashboard(userId=${userId})}">
+    <button>Kembali ke Dashboard</button>
+    </a>
+
+</div>
+</body>
+</html>

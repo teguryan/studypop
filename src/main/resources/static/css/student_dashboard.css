@@ -1,287 +1,248 @@
-* {
-    box-sizing: border-box;
-}
-
+/** {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    box-sizing: border-box;*/
+/*}*/
 
 /*body {*/
 /*    font-family: 'Poppins', sans-serif;*/
-/*    background-color: #9cc97f;*/
+/*    background-color: #f7f9fc;*/
 /*    display: flex;*/
-/*    justify-content: center;*/
-/*    align-items: center;*/
-/*    height: 100vh;*/
-/*    margin: 0;*/
+/*    min-height: 100vh;*/
 /*}*/
 
-/*!*.admin-container {*!*/
-/*!*    width: 100%;*!*/
-/*!*    max-width: 900px;*!*/
-/*!*    margin: 20px auto;*!*/
-/*!*    padding: 30px;*!*/
-/*!*    background-color: #fff;*!*/
-/*!*    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);*!*/
-/*!*    border-radius: 10px;*!*/
-/*!*}*!*/
-
-/*.admin-container {*/
-/* display: grid;*/
-/*    grid-template-columns: repeat(4, 1fr);*/
-/*    gap: 20px;*/
-/*    padding: 20px;*/
-/*    !*background-color: #cddecb;*!*/
-/*}*/
-
-/*.card{*/
-/*    background-color: #cddecb;*/
-/*    border-radius: 10px;*/
-/*    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);*/
-/*    padding: 20px;*/
-/*    text-align: center;*/
+/*!* Sidebar Styling - Sama seperti halaman statistik *!*/
+/*.sidebar {*/
+/*    width: 280px;*/
+/*    background-color: #9cc97f;*/
+/*    color: white;*/
+/*    padding: 30px 25px;*/
 /*    display: flex;*/
 /*    flex-direction: column;*/
 /*    justify-content: space-between;*/
+/*    box-shadow: 2px 0 10px rgba(0,0,0,0.1);*/
+/*    position: fixed;*/
+/*    height: 100vh;*/
+/*    left: 0;*/
+/*    top: 0;*/
 /*}*/
 
-/*.card h3 {*/
-/*    font-family: Poppins, sans-serif;*/
-/*    font-weight: 500;*/
+/*.sidebar-top {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*}*/
+
+/*.logo {*/
+/*    font-size: 28px;*/
+/*    font-weight: 700;*/
+/*    margin-bottom: 40px;*/
+/*    letter-spacing: -0.5px;*/
+/*}*/
+
+/*.welcome {*/
 /*    font-size: 18px;*/
+/*    font-weight: 400;*/
+/*    opacity: 0.95;*/
+/*    line-height: 1.4;*/
+/*}*/
+
+/*.logout-btn {*/
+/*    background: rgba(255, 255, 255, 0.2);*/
+/*    color: white;*/
+/*    padding: 12px 20px;*/
+/*    border-radius: 8px;*/
+/*    text-decoration: none;*/
+/*    font-weight: 500;*/
+/*    text-align: center;*/
+/*    transition: all 0.3s ease;*/
+/*    border: none;*/
+/*}*/
+
+/*.logout-btn:hover {*/
+/*    background: rgba(255, 255, 255, 0.3);*/
+/*    transform: translateY(-2px);*/
+/*}*/
+
+/*!* Main Content Container *!*/
+/*.profile-container {*/
+/*    flex: 1;*/
+/*    margin-left: 280px;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*}*/
+
+/*.profile-content {*/
+/*    padding: 40px;*/
+/*    flex: 1;*/
+/*}*/
+
+/*!* Header Styling *!*/
+/*.profile-header {*/
+/*    text-align: center;*/
+/*    margin-bottom: 50px;*/
+/*}*/
+
+/*.profile-header h2 {*/
+/*    font-size: 36px;*/
+/*    font-weight: 600;*/
 /*    color: #333;*/
 /*    margin-bottom: 10px;*/
 /*}*/
 
-/*.header {*/
-/*    text-align: center;*/
-/*    margin-bottom: 20px;*/
+/*.profile-header p {*/
+/*    font-size: 20px;*/
+/*    color: #666;*/
+/*    font-weight: 400;*/
 /*}*/
 
-/*.header h1 {*/
-/*    font-family: Poppins, sans-serif;*/
-/*    font-size: 32px;*/
+/*!* Action Cards Container *!*/
+/*.action-card {*/
+/*    display: grid;*/
+/*    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));*/
+/*    gap: 30px;*/
+/*    max-width: 1000px;*/
+/*    margin: 0 auto;*/
+/*}*/
+
+/*!* Individual Cards *!*/
+/*.cards {*/
+/*    background: white;*/
+/*    border-radius: 20px;*/
+/*    padding: 40px 30px;*/
+/*    text-align: center;*/
+/*    box-shadow: 0 8px 30px rgba(0,0,0,0.08);*/
+/*    transition: all 0.3s ease;*/
+/*    border: 1px solid rgba(156, 201, 127, 0.1);*/
+/*    position: relative;*/
+/*    overflow: hidden;*/
+/*}*/
+
+/*.cards::before {*/
+/*    content: '';*/
+/*    position: absolute;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    right: 0;*/
+/*    height: 4px;*/
+/*    background: #9cc97f;*/
+/*}*/
+
+/*.cards:hover {*/
+/*    transform: translateY(-8px);*/
+/*    box-shadow: 0 15px 40px rgba(156, 201, 127, 0.2);*/
+/*}*/
+
+/*.cards h3 {*/
+/*    font-size: 28px;*/
+/*    font-weight: 600;*/
 /*    color: #333;*/
+/*    margin-bottom: 25px;*/
 /*}*/
 
-/*.header p {*/
-/*    font-family: Poppins, sans-serif;*/
-/*    font-size: 18px;*/
-/*    color: #555;*/
-/*}*/
-
-/*!* Sidebar *!*/
-/*.sidebar {*/
-/*    width: 250px;*/
-/*    background-color: #007BFF;*/
-/*    padding: 20px;*/
-/*    color: #fff;*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    justify-content: space-between;*/
-/*    height: 100%;*/
-/*}*/
-
-/*.sidebar h2 {*/
-/*    text-align: center;*/
-/*    font-size: 24px;*/
-/*    margin-bottom: 30px;*/
-/*}*/
-
-/*.menu {*/
-/*    list-style: none;*/
-/*}*/
-
-/*.menu li {*/
-/*    margin: 15px 0;*/
-/*}*/
-
-/*.menu a {*/
-/*    text-decoration: none;*/
-/*    color: #fff;*/
-/*    font-size: 18px;*/
-/*    transition: color 0.3s;*/
-/*}*/
-
-/*.menu a:hover {*/
-/*    color: #ffd700;*/
-/*}*/
-
+/*!* Action Buttons *!*/
 /*.action-buttons {*/
-/*    display: flex;*/
-/*    justify-content: space-between;*/
-/*    margin-bottom: 30px;*/
+/*    margin-top: 20px;*/
+/*}*/
+
+/*.action-buttons a {*/
+/*    text-decoration: none;*/
 /*}*/
 
 /*.action-buttons button {*/
-/*    font-family: Poppins, sans-serif;*/
-/*    background-color: #741c28;*/
+/*    background: #9cc97f;*/
 /*    color: white;*/
-/*    font-size: 16px;*/
-/*    padding: 12px 24px;*/
 /*    border: none;*/
-/*    border-radius: 5px;*/
+/*    padding: 15px 30px;*/
+/*    border-radius: 12px;*/
+/*    font-size: 16px;*/
+/*    font-weight: 600;*/
 /*    cursor: pointer;*/
-/*    transition: background-color 0.3s ease;*/
+/*    transition: all 0.3s ease;*/
+/*    font-family: 'Poppins', sans-serif;*/
+/*    min-width: 180px;*/
+/*    box-shadow: 0 4px 15px rgba(156, 201, 127, 0.3);*/
 /*}*/
 
 /*.action-buttons button:hover {*/
-/*    background-color: #741c20;*/
+/*    transform: translateY(-2px);*/
+/*    box-shadow: 0 6px 20px rgba(156, 201, 127, 0.4);*/
+/*    background-color: #8bb86a;*/
 /*}*/
 
-/* Basic Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Poppins, sans-serif;
-    font-weight: 700;
-    background-color: #f7f9fc;
-    display: flex;
-    height: 100vh;
-    margin: 0;
-    justify-content: center; /* Center the content horizontally */
-    align-items: center; /* Center the content vertically */
-}
-
-.profile-container {
-    display: flex;
-    width: 100%;
-    height: 100%;
-}
-
-/* Sidebar */
-.sidebar {
-    width: 250px;
-    background-color: #9cc97f;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px;
-    box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.1);
-}
-
-.sidebar-header h2 {
-    font-size: 28px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 30px;
-    color: #fff;
-}
-
-.menu {
-    list-style: none;
-    padding: 0;
-}
-
-.menu li {
-    margin-bottom: 20px;
-}
-
-.menu a {
-    font-family: Poppins, sans-serif;
-    text-decoration: none;
-    font-size: 20px;
-    color: #fff;
-    font-weight: 500;
-    transition: color 0.3s;
-}
-
-.menu a:hover {
-    color: #FFD700;
-}
-
-/* Profile Content */
-.profile-content {
-    flex-grow: 1;
-    background-color: #fff;
-    padding: 40px;
-    overflow-y: auto;
-}
-
-.profile-header {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.profile-header h2 {
-    font-family: Poppins, sans-serif;
-    font-size: 32px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.profile-header p {
-    font-family: Poppins, sans-serif;
-    font-size: 18px;
-    color: #666;
-}
-
-/*!* Profile Info Cards *!*/
-/*.tambah-flashcard {*/
-/*    display: grid;*/
-/*    grid-template-columns: repeat(2, 1fr);*/
-/*    gap: 20px;*/
+/*.action-buttons button:active {*/
+/*    transform: translateY(0);*/
 /*}*/
 
-.action-card {
-    display: flex;
-    justify-content: space-around; /* Membuat card tersebar */
-    align-items: center;
-    gap: 5px; /* Jarak antar kotak */
-    padding: 20px;
-    flex-wrap: wrap; /* Membuat card terurai jika ukuran layar kecil */
-    grid-template-columns: repeat(3, 1fr);
-}
+/*!* Special styling for different card types *!*/
+/*.cards:nth-child(1) {*/
+/*    background: linear-gradient(145deg, #fff 0%, #f8fff8 100%);*/
+/*}*/
 
-    /* Styling untuk setiap card (kotak tombol) */
-.cards {
-    background-color: #f1f5f8;
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    width: 250px;  /* Lebar kotak */
-    height: 150px;  /* Tinggi kotak */
-    text-align: center;
-    transition: transform 0.3s; /* Efek hover */
-}
+/*.cards:nth-child(2) {*/
+/*    background: linear-gradient(145deg, #fff 0%, #f8f9ff 100%);*/
+/*}*/
 
-.cards:hover {
-    transform: translateY(-5px);
-}
+/*.cards:nth-child(3) {*/
+/*    background: linear-gradient(145deg, #fff 0%, #fff8f8 100%);*/
+/*}*/
 
-.cards h3 {
-    font-family: Poppins, sans-serif;
-    font-size: 20px;
-    color: #333;
-    margin-bottom: 15px;
-}
+/*!* Add icons to cards *!*/
+/*.cards:nth-child(1) h3::before {*/
+/*    content: "🃏";*/
+/*    display: block;*/
+/*    font-size: 48px;*/
+/*    margin-bottom: 15px;*/
+/*}*/
 
-.cards p {
-    font-family: Poppins, sans-serif;
-    font-size: 18px;
-    color: #555;
-}
+/*.cards:nth-child(2) h3::before {*/
+/*    content: "📝";*/
+/*    display: block;*/
+/*    font-size: 48px;*/
+/*    margin-bottom: 15px;*/
+/*}*/
 
+/*.cards:nth-child(3) h3::before {*/
+/*    content: "📊";*/
+/*    display: block;*/
+/*    font-size: 48px;*/
+/*    margin-bottom: 15px;*/
+/*}*/
 
-.action-buttons button {
-    font-family: Poppins, sans-serif;
-    background-color: #9cc97f;
-    color: white;
-    font-size: 16px;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
+/*!* Responsive Design *!*/
+/*@media (max-width: 768px) {*/
+/*    .sidebar {*/
+/*        width: 100%;*/
+/*        height: auto;*/
+/*        position: relative;*/
+/*        padding: 20px;*/
+/*    }*/
 
-.action-buttons button:hover {
-    background-color: #45a049;
-}
+/*    .profile-container {*/
+/*        margin-left: 0;*/
+/*    }*/
+
+/*    .profile-content {*/
+/*        padding: 20px;*/
+/*    }*/
+
+/*    .profile-header h2 {*/
+/*        font-size: 28px;*/
+/*    }*/
+
+/*    .profile-header p {*/
+/*        font-size: 18px;*/
+/*    }*/
+
+/*    .action-card {*/
+/*        grid-template-columns: 1fr;*/
+/*        gap: 20px;*/
+/*    }*/
+
+/*    .cards {*/
+/*        padding: 30px 20px;*/
+/*    }*/
+
+/*    .cards h3 {*/
+/*        font-size: 24px;*/
+/*    }*/
+/*}*/

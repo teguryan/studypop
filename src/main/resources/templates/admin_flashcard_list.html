@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manajemen Flashcard</title>
+</head>
+<body>
+
+    <h1>Daftar Flashcard</h1>
+
+    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+        <a href="/admin/flashcards/add">
+            <button>Tambah Flashcard</button>
+        </a>
+        <a href="/admin/topics">
+            <button>Manajemen Topik</button>
+        </a>
+    </div>
+
+
+    <table border="1">
+        <thead>
+        <tr>
+            <th>No</th>
+            <th>Pertanyaan</th>
+            <th>Jawaban</th>
+            <th>Topik</th>
+            <th>Aksi</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="fc, iter : ${flashcards}">
+            <td th:text="${iter.count}">1</td>
+            <td th:text="${fc.question}">Soal</td>
+            <td th:text="${fc.answer}">Jawaban</td>
+            <td th:text="${fc.topikQuiz.name}">Topik</td>
+            <td>
+                <a th:href="@{/admin/flashcards/delete(id=${fc.id})}">
+                    <button onclick="return confirm('Yakin ingin menghapus flashcard ini?')">Hapus</button>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/admin_dashboard(userId=1)}">
+        <button>Kembali ke Dashboard</button>
+    </a>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hasil Kuis</title>
+</head>
+<body>
+<h1>Hasil Kuis</h1>
+
+<p>Total Skor: <span th:text="${score}"></span></p>
+
+<!-- Tampilkan status benar/salah untuk setiap soal -->
+<div th:each="flashcard, iter : ${flashcards}">
+    <p><strong th:text="${flashcard.question}"></strong></p>
+    <p>Jawaban Anda: <span th:text="${flashcard.studentAnswer}"></span></p>
+    <p>Status: <span th:text="${flashcard.isCorrect ? 'Benar' : 'Salah'}"></span></p>
+</div>
+
+<a th:href="@{/admin/kerjakan_quiz}">Kembali ke Pilihan Topik</a>
+</body>
+</html>
