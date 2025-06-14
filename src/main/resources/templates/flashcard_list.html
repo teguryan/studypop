@@ -1,25 +1,740 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Flashcards</title>
-    <link rel="stylesheet" href="/css/flashcard.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Flashcard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f9fc;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #9cc97f;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100vh;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .welcome {
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 40px;
+        }
+
+        .main-content h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .action-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            background-color: #218838;
+            text-decoration: none;
+            color: white;
+        }
+
+        .action-btn.secondary {
+            background-color: #6c757d;
+        }
+
+        .action-btn.secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* Table Styles */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        th, td {
+            padding: 15px 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            font-size: 14px;
+            color: #333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Question and Answer Cell Styling */
+        .question-cell, .answer-cell {
+            max-width: 200px;
+        }
+
+        .question-text, .answer-text {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .question-text:hover, .answer-text:hover {
+            color: #007bff;
+        }
+
+        /* Topic Badge */
+        .topic-badge {
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Delete Button */
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* Dashboard Button */
+        .dashboard-btn {
+            background-color: #9cc97f;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            display: inline-block;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .dashboard-btn:hover {
+            background-color: #7db85f;
+            text-decoration: none;
+            color: white;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .empty-state h3 {
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #adb5bd;
+            margin-bottom: 20px;
+        }
+
+        /* Error Message */
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #adb5bd;
+        }
+
+        .modal-body {
+            margin-bottom: 25px;
+        }
+
+        .modal-field {
+            margin-bottom: 20px;
+        }
+
+        .modal-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+
+        .modal-text {
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        /* Form Styles in Modal */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #28a745;
+            box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #28a745;
+            box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-btn.primary {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .modal-btn.primary:hover {
+            background-color: #218838;
+        }
+
+        .modal-btn.secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .modal-btn.secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .modal-btn.danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .modal-btn.danger:hover {
+            background-color: #c82333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+                padding: 20px;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="flashcard-container">
-    <h1>Flashcard Topik: <span th:text="${topik.name}">Nama Topik</span></h1>
-
-    <div th:each="flashcard : ${flashcards}" class="flashcard">
-        <p><strong>Pertanyaan:</strong> <span th:text="${flashcard.question}"></span></p>
-        <p><strong>Jawaban:</strong> <span th:text="${flashcard.answer}"></span></p>
-        <hr>
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">StudyPop</div>
+        <div class="welcome">Welcome, Admin!</div>
+        <a href="/logout" class="logout-btn">Logout</a>
     </div>
 
-    <a th:href="@{/flashcard_topics(userId=${userId})}">Kembali ke Pilihan Topik</a>
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>Daftar Flashcard</h1>
 
-    <a th:href="@{/student_dashboard(userId=${userId})}">
-    <button>Kembali ke Dashboard</button>
-    </a>
+        <!-- Error Message -->
+        <div th:if="${error}" class="error-message">
+            <strong>Error!</strong> <span th:text="${error}"></span>
+        </div>
 
+        <!-- Success Message -->
+        <div id="successMessage" class="success-message">
+            <strong>Berhasil!</strong> Flashcard telah berhasil ditambahkan/dihapus.
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button onclick="showAddFlashcardModal()" class="action-btn">
+                + Tambah Flashcard
+            </button>
+            <a href="/admin/topics" class="action-btn secondary">
+                📚 Manajemen Topik
+            </a>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${flashcards == null or #lists.isEmpty(flashcards)}" class="empty-state">
+            <h3>Belum Ada Flashcard</h3>
+            <p>Silakan tambahkan flashcard pertama Anda dengan mengklik tombol "Tambah Flashcard" di atas.</p>
+            <button onclick="showAddFlashcardModal()" class="action-btn">
+                + Tambah Flashcard Pertama
+            </button>
+        </div>
+
+        <!-- Flashcard Table -->
+        <table th:if="${flashcards != null and !#lists.isEmpty(flashcards)}">
+            <thead>
+            <tr>
+                <th style="width: 50px;">NO</th>
+                <th style="width: 400px;">PERTANYAAN</th>
+                <th style="width: 400px;">JAWABAN</th>
+                <th style="width: 150px;">TOPIK</th>
+                <th style="width: 120px;">AKSI</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="fc, iter : ${flashcards}">
+                <td th:text="${iter.count}" style="font-weight: 600; color: #6c757d;">1</td>
+                <td class="question-cell">
+                    <span class="question-text"
+                          th:text="${fc.question ?: 'N/A'}"
+                          th:title="${fc.question ?: 'N/A'}"
+                          th:data-content="${fc.question ?: 'N/A'}"
+                          onclick="showDetailModal('Pertanyaan', this.getAttribute('data-content'))">
+                        Berapa 5 + 3 ?
+                    </span>
+                </td>
+                <td class="answer-cell">
+                    <span class="answer-text"
+                          th:text="${fc.answer ?: 'N/A'}"
+                          th:title="${fc.answer ?: 'N/A'}"
+                          th:data-content="${fc.answer ?: 'N/A'}"
+                          onclick="showDetailModal('Jawaban', this.getAttribute('data-content'))">
+                        8
+                    </span>
+                </td>
+                <td>
+                    <span class="topic-badge" th:text="${fc.topikQuiz?.name ?: 'No Topic'}">Matematika</span>
+                </td>
+                <td>
+                    <button class="delete-btn"
+                            th:data-id="${fc.id}"
+                            onclick="showDeleteModal(this.getAttribute('data-id'))">
+                        🗑️ Hapus
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Back to Dashboard Button -->
+        <a th:href="@{/admin_dashboard(userId=1)}" class="dashboard-btn">
+            ← Kembali ke Dashboard
+        </a>
+    </div>
 </div>
+
+<!-- Add Flashcard Modal -->
+<div id="addFlashcardModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Tambah Flashcard</h3>
+            <button class="close-btn" onclick="closeModal('addFlashcardModal')">&times;</button>
+        </div>
+        <form id="addFlashcardForm" th:action="@{/admin/flashcards/add}" method="post">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="question">Pertanyaan:</label>
+                    <input type="text" id="question" name="question" class="form-input" required
+                           placeholder="Masukkan pertanyaan flashcard">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="answer">Jawaban:</label>
+                    <input type="text" id="answer" name="answer" class="form-input" required
+                           placeholder="Masukkan jawaban">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="topikId">Topik:</label>
+                    <select id="topikId" name="topikId" class="form-select" required>
+                        <option value="">Pilih Topik</option>
+                        <!-- Sample options - in real implementation, this would be populated from backend -->
+                        <option value="1">Matematika</option>
+                        <option value="2">Pemrograman Web</option>
+                        <!-- Thymeleaf version: -->
+                        <!-- <option th:each="topic : ${topics}" th:value="${topic.id}" th:text="${topic.name}"></option> -->
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn secondary" onclick="closeModal('addFlashcardModal')">
+                    Batal
+                </button>
+                <button type="submit" class="modal-btn primary">
+                    Simpan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Detail Modal -->
+<div id="detailModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="detailModalTitle" class="modal-title">Detail</h3>
+            <button class="close-btn" onclick="closeModal('detailModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-field">
+                <div id="detailModalContent" class="modal-text"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-btn secondary" onclick="closeModal('detailModal')">Tutup</button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Konfirmasi Hapus</h3>
+            <button class="close-btn" onclick="closeModal('deleteModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Apakah Anda yakin ingin menghapus flashcard ini? Tindakan ini tidak dapat dibatalkan.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-btn secondary" onclick="closeModal('deleteModal')">Batal</button>
+            <button id="confirmDeleteBtn" class="modal-btn danger" onclick="confirmDelete()">Hapus</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentDeleteId = null;
+
+    // Show add flashcard modal
+    function showAddFlashcardModal() {
+        // Reset form
+        document.getElementById('addFlashcardForm').reset();
+        showModal('addFlashcardModal');
+    }
+
+    // Show detail modal for truncated text
+    function showDetailModal(title, content) {
+        document.getElementById('detailModalTitle').textContent = title;
+        document.getElementById('detailModalContent').textContent = content || 'N/A';
+        showModal('detailModal');
+    }
+
+    // Show delete confirmation modal
+    function showDeleteModal(id) {
+        currentDeleteId = id;
+        showModal('deleteModal');
+    }
+
+    // Show modal
+    function showModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Close modal
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.remove('show');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Confirm delete
+    function confirmDelete() {
+        if (currentDeleteId) {
+            window.location.href = `/admin/flashcards/delete?id=${currentDeleteId}`;
+        }
+    }
+
+    // Show success message
+    function showSuccessMessage() {
+        const successMsg = document.getElementById('successMessage');
+        successMsg.classList.add('show');
+        setTimeout(() => {
+            successMsg.classList.remove('show');
+        }, 3000);
+    }
+
+    // Handle form submission
+    document.getElementById('addFlashcardForm').addEventListener('submit', function(e) {
+        // Form will be submitted normally to backend
+        // You might want to add client-side validation here
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                closeModal(modal.id);
+            }
+        });
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const openModal = document.querySelector('.modal.show');
+            if (openModal) {
+                closeModal(openModal.id);
+            }
+        }
+    });
+
+    // Check URL parameters for success messages
+    window.addEventListener('load', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('deleted') === 'true' || urlParams.get('added') === 'true') {
+            showSuccessMessage();
+        }
+    });
+</script>
 </body>
 </html>

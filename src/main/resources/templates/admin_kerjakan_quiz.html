@@ -1,45 +1,741 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kerjakan Quiz - Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f9fc;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .profile-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #9cc97f;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100vh;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .welcome {
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .main-content {
+            margin-left: 280px;
+            flex-grow: 1;
+            background-color: #ffffff;
+            padding: 50px 60px;
+            overflow-y: auto;
+            min-height: 100vh;
+        }
+
+        .main-content-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .main-content-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .main-content-header p {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+        }
+
+        .topic-selection-container {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid #e8ecef;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e8ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            background-color: white;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: #9cc97f;
+            box-shadow: 0 0 0 3px rgba(156, 201, 127, 0.1);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #9cc97f 0%, #7fb069 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #7fb069 0%, #6a9c57 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(156, 201, 127, 0.4);
+        }
+
+        .quiz-container {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            border: 1px solid #e8ecef;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e8ecef;
+        }
+
+        .quiz-header h3 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .quiz-header .topic-name {
+            font-size: 20px;
+            color: #9cc97f;
+            font-weight: 600;
+        }
+
+        .question-item {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8fffe;
+            border-radius: 12px;
+            border-left: 4px solid #9cc97f;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e8ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #9cc97f;
+            box-shadow: 0 0 0 3px rgba(156, 201, 127, 0.1);
+        }
+
+        .quiz-submit-btn {
+            background: linear-gradient(135deg, #9cc97f 0%, #7fb069 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .quiz-submit-btn:hover {
+            background: linear-gradient(135deg, #7fb069 0%, #6a9c57 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(156, 201, 127, 0.4);
+        }
+
+        /* Modal Styles untuk Hasil Quiz */
+        .result-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+        }
+
+        .result-modal-content {
+            background-color: #ffffff;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: resultModalSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes resultModalSlideIn {
+            from {
+                transform: translateY(-100px) scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .result-modal-header {
+            background: linear-gradient(135deg, #9cc97f 0%, #7fb069 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .result-modal-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .result-modal-header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .result-close {
+            color: white;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .result-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .result-modal-body {
+            padding: 30px;
+        }
+
+        .score-display {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8fffe 0%, #ffffff 100%);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #e8ecef;
+        }
+
+        .score-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: #9cc97f;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(156, 201, 127, 0.3);
+        }
+
+        .score-label {
+            font-size: 18px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .question-result {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 2px solid #e8ecef;
+            transition: all 0.3s ease;
+        }
+
+        .question-result.correct {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #d5f4e6 0%, #fafffe 100%);
+        }
+
+        .question-result.incorrect {
+            border-color: #e74c3c;
+            background: linear-gradient(135deg, #fdeaea 0%, #fafffe 100%);
+        }
+
+        .question-result-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .status-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .status-icon.correct {
+            background-color: #27ae60;
+        }
+
+        .status-icon.incorrect {
+            background-color: #e74c3c;
+        }
+
+        .question-result-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            flex-grow: 1;
+        }
+
+        .answer-display {
+            margin-top: 10px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .answer-display strong {
+            color: #2c3e50;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 2px solid #e8ecef;
+            text-align: center;
+        }
+
+        .back-to-quiz-btn {
+            background: linear-gradient(135deg, #9cc97f 0%, #7fb069 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-to-quiz-btn:hover {
+            background: linear-gradient(135deg, #7fb069 0%, #6a9c57 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(156, 201, 127, 0.4);
+        }
+
+        /* Loading State */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading .quiz-submit-btn {
+            background: #bdc3c7;
+            cursor: wait;
+        }
+
+        .loading .quiz-submit-btn::after {
+            content: "";
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+
+            .main-content-header h2 {
+                font-size: 28px;
+            }
+
+            .result-modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+
+            .result-modal-body {
+                padding: 20px;
+            }
+
+            .score-number {
+                font-size: 36px;
+            }
+
+            .topic-selection-container,
+            .quiz-container {
+                padding: 25px;
+            }
+
+            .question-item {
+                padding: 20px;
+            }
+
+            .quiz-header h3 {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-<h1>Kerjakan Quiz</h1>
+<div class="profile-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">StudyPop</div>
+        <div class="welcome">Welcome, admin!</div>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </div>
 
-<!-- Pilih topik quiz -->
-<form th:action="@{/admin/kerjakan_quiz}" method="get">
-    <label for="topikId">Pilih Topik:</label>
-    <select name="topikId" id="topikId">
-        <option th:each="topic : ${topics}"
-                th:value="${topic.id}"
-                th:text="${topic.name}">
-        </option>
-    </select>
-
-    <!-- Preserve userId when selecting topic -->
-    <input type="hidden" th:value="${user?.id}" name="userId" th:if="${user}">
-
-    <button type="submit">Pilih</button>
-</form>
-
-<!-- Tampilkan soal flashcard berdasarkan topik yang dipilih -->
-<div th:if="${flashcards}">
-    <form th:action="@{/admin/kerjakan_quiz/{topikId}(topikId=${topik.id})}" method="post">
-        <h2>Topik: <span th:text="${topik.name}"></span></h2>
-
-        <div th:each="flashcard : ${flashcards}">
-            <p><strong th:text="${flashcard.question}"></strong></p>
-            <input type="text" th:name="'answers[' + ${flashcard.id} + ']'" placeholder="Jawaban Anda" required /><br><br>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="main-content-header">
+            <h2>Kerjakan Quiz</h2>
+            <p>Pilih topik dan kerjakan quiz untuk menguji pemahaman</p>
         </div>
 
-        <!-- Menyertakan userId sebagai input hidden -->
-        <input type="hidden" th:value="${user.id}" name="userId">
+        <!-- Topic Selection Form -->
+        <div class="topic-selection-container">
+            <form th:action="@{/admin/kerjakan_quiz}" method="get">
+                <div class="form-group">
+                    <label for="topikId">Pilih Topik:</label>
+                    <select name="topikId" id="topikId">
+                        <option value="">-- Pilih Topik --</option>
+                        <option th:each="topic : ${topics}"
+                                th:value="${topic.id}"
+                                th:text="${topic.name}"
+                                th:selected="${topic.id == param.topikId}">
+                        </option>
+                        <!-- Demo options -->
+                        <option value="1" selected>Matematika</option>
+                        <option value="2">Bahasa Indonesia</option>
+                        <option value="3">IPA</option>
+                    </select>
+                </div>
 
-        <!-- Tombol submit -->
-        <button type="submit">Kirim Jawaban</button>
+                <input type="hidden" th:value="${user?.id}" name="userId" th:if="${user}">
+                <input type="hidden" value="1" name="userId">
 
-    </form>
+                <button type="submit" class="submit-btn">Pilih Topik</button>
+            </form>
+        </div>
+
+        <!-- Quiz Questions -->
+        <div class="quiz-container" id="quizContainer">
+            <div class="quiz-header">
+                <h3>Quiz</h3>
+                <div class="topic-name">Matematika</div>
+            </div>
+
+            <form id="quizForm">
+                <div class="question-item">
+                    <div class="question-text">Berapa 5 + 3 ?</div>
+                    <input type="text" name="answer1" class="answer-input" placeholder="Masukkan jawaban Anda di sini..." required />
+                </div>
+
+                <div class="question-item">
+                    <div class="question-text">Berapa 10 - 6?</div>
+                    <input type="text" name="answer2" class="answer-input" placeholder="Masukkan jawaban Anda di sini..." required />
+                </div>
+
+                <input type="hidden" value="1" name="userId">
+                <button type="submit" class="quiz-submit-btn">Kirim Jawaban</button>
+            </form>
+        </div>
+    </div>
 </div>
+
+<!-- Modal untuk Hasil Quiz -->
+<div id="resultModal" class="result-modal">
+    <div class="result-modal-content">
+        <div class="result-modal-header">
+            <span class="result-close" onclick="closeResultModal()">&times;</span>
+            <h2>Hasil Kuis</h2>
+            <p>Berikut adalah hasil dari quiz yang telah Anda kerjakan</p>
+        </div>
+
+        <div class="result-modal-body">
+            <div class="score-display">
+                <div class="score-number" id="scoreNumber">2</div>
+                <div class="score-label">Total Skor</div>
+            </div>
+
+            <div id="questionResults">
+                <div class="question-result correct">
+                    <div class="question-result-header">
+                        <div class="status-icon correct">✓</div>
+                        <div class="question-result-text">Berapa 5 + 3 ?</div>
+                    </div>
+                    <div class="answer-display">
+                        <strong>Jawaban Anda:</strong> 8<br>
+                        <strong>Status:</strong> <span style="color: #27ae60; font-weight: 600;">Benar</span>
+                    </div>
+                </div>
+
+                <div class="question-result incorrect">
+                    <div class="question-result-header">
+                        <div class="status-icon incorrect">✗</div>
+                        <div class="question-result-text">Berapa 10 - 6?</div>
+                    </div>
+                    <div class="answer-display">
+                        <strong>Jawaban Anda:</strong> 5<br>
+                        <strong>Status:</strong> <span style="color: #e74c3c; font-weight: 600;">Salah</span><br>
+                        <strong>Jawaban yang benar:</strong> 4
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <a href="/admin/kerjakan_quiz" class="back-to-quiz-btn" onclick="closeResultModal()">Kembali ke Pilihan Topik</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Handle quiz form submission
+    document.getElementById('quizForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Add loading state
+        document.body.classList.add('loading');
+
+        // Simulate API call (replace with actual AJAX call to your backend)
+        setTimeout(function() {
+            // Remove loading state
+            document.body.classList.remove('loading');
+
+            // Process answers (this would normally be done by your backend)
+            processQuizAnswers();
+
+            // Show result modal
+            showResultModal();
+        }, 1500);
+    });
+
+    function processQuizAnswers() {
+        // Get form data
+        const formData = new FormData(document.getElementById('quizForm'));
+        const answer1 = formData.get('answer1');
+        const answer2 = formData.get('answer2');
+
+        // Simulate processing (replace with actual backend logic)
+        let score = 0;
+        const results = [];
+
+        // Question 1: 5 + 3 = 8
+        const isCorrect1 = answer1 === '8';
+        if (isCorrect1) score++;
+        results.push({
+            question: 'Berapa 5 + 3 ?',
+            answer: answer1,
+            correct: isCorrect1,
+            correctAnswer: '8'
+        });
+
+        // Question 2: 10 - 6 = 4
+        const isCorrect2 = answer2 === '4';
+        if (isCorrect2) score++;
+        results.push({
+            question: 'Berapa 10 - 6?',
+            answer: answer2,
+            correct: isCorrect2,
+            correctAnswer: '4'
+        });
+
+        // Update modal content
+        updateResultModal(score, results);
+    }
+
+    function updateResultModal(score, results) {
+        // Update score
+        document.getElementById('scoreNumber').textContent = score;
+
+        // Update question results
+        const resultsContainer = document.getElementById('questionResults');
+        resultsContainer.innerHTML = '';
+
+        results.forEach(result => {
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `question-result ${result.correct ? 'correct' : 'incorrect'}`;
+
+            let correctAnswerText = '';
+            if (!result.correct) {
+                correctAnswerText = `<br><strong>Jawaban yang benar:</strong> ${result.correctAnswer}`;
+            }
+
+            resultDiv.innerHTML = `
+                <div class="question-result-header">
+                    <div class="status-icon ${result.correct ? 'correct' : 'incorrect'}">
+                        ${result.correct ? '✓' : '✗'}
+                    </div>
+                    <div class="question-result-text">${result.question}</div>
+                </div>
+                <div class="answer-display">
+                    <strong>Jawaban Anda:</strong> ${result.answer}<br>
+                    <strong>Status:</strong> <span style="color: ${result.correct ? '#27ae60' : '#e74c3c'}; font-weight: 600;">
+                        ${result.correct ? 'Benar' : 'Salah'}
+                    </span>${correctAnswerText}
+                </div>
+            `;
+
+            resultsContainer.appendChild(resultDiv);
+        });
+    }
+
+    function showResultModal() {
+        document.getElementById('resultModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeResultModal() {
+        document.getElementById('resultModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('resultModal');
+        if (event.target == modal) {
+            closeResultModal();
+        }
+    }
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeResultModal();
+        }
+    });
+</script>
 
 </body>
 </html>

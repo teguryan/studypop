@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,15 +37,59 @@ public class AdminFlashcardController {
 
     @GetMapping("/admin/flashcards")
     public String showFlashcards(@RequestParam(required = false) Integer userId, Model model) {
-        List<Flashcard> flashcards = flashcardRepository.findAll();
-        model.addAttribute("flashcards", flashcards);
+        try {
+            // Log untuk debugging
+            System.out.println("Accessing /admin/flashcards endpoint");
 
-        if (userId != null) {
-            model.addAttribute("userId", userId); // Kirim userId jika ada
+            List<Flashcard> flashcards = flashcardRepository.findAll();
+            List<TopikQuiz> topics = topicQuizRepository.findAll(); // Tambahkan ini untuk modal
+
+            // Debug log
+            System.out.println("Found " + (flashcards != null ? flashcards.size() : "null") + " flashcards");
+
+            // Ensure flashcards is never null
+            if (flashcards == null) {
+                flashcards = new ArrayList<>();
+            }
+
+            // Validate each flashcard and its relationships
+            for (int i = 0; i < flashcards.size(); i++) {
+                Flashcard fc = flashcards.get(i);
+                System.out.println("Flashcard " + i + ": " +
+                        "ID=" + fc.getId() +
+                        ", Question=" + (fc.getQuestion() != null ? fc.getQuestion().substring(0, Math.min(20, fc.getQuestion().length())) : "null") +
+                        ", TopikQuiz=" + (fc.getTopikQuiz() != null ? fc.getTopikQuiz().getName() : "null"));
+
+                // Handle null topikQuiz
+                if (fc.getTopikQuiz() == null) {
+                    System.err.println("Warning: Flashcard " + fc.getId() + " has null topikQuiz");
+                }
+            }
+
+            model.addAttribute("flashcards", flashcards);
+            model.addAttribute("topics", topics); // Tambahkan topics untuk dropdown di modal
+
+            if (userId != null) {
+                model.addAttribute("userId", userId);
+            }
+
+            System.out.println("Successfully prepared model for admin_flashcard_list");
+            return "admin_flashcard_list";
+
+        } catch (Exception e) {
+            System.err.println("Error in showFlashcards: " + e.getMessage());
+            e.printStackTrace();
+
+            // Add error details to model
+            model.addAttribute("error", "Error loading flashcards: " + e.getMessage());
+            model.addAttribute("flashcards", new ArrayList<>());
+            model.addAttribute("topics", new ArrayList<>()); // Tambahkan topics kosong jika error
+
+            // Still return the template, but with error message
+            return "admin_flashcard_list";
         }
-
-        return "admin_flashcard_list";
     }
+
 
     @GetMapping("/admin/flashcards/add")
     public String showAddForm(Model model) {
@@ -59,13 +104,13 @@ public class AdminFlashcardController {
         TopikQuiz topik = topicQuizRepository.findById(topikId).orElseThrow();
         flashcard.setTopikQuiz(topik);
         flashcardRepository.save(flashcard);
-        return "redirect:/admin/flashcards";
+        return "redirect:/admin/flashcards?added=true"; // Tambahkan parameter untuk success message
     }
 
     @GetMapping("/admin/flashcards/delete")
     public String deleteFlashcard(@RequestParam Long id) {
         flashcardRepository.deleteById(id);
-        return "redirect:/admin/flashcards";
+        return "redirect:/admin/flashcards?deleted=true"; // Tambahkan parameter untuk success message
     }
 
     @GetMapping("/admin/topics")
@@ -89,21 +134,16 @@ public class AdminFlashcardController {
 
     @GetMapping("/admin_dashboard")
     public String adminDashboard(@RequestParam(required = false) Integer userId, Model model) {
+        // Use default userId if none provided
         if (userId == null) {
-            // Jika userId tidak ada, redirect ke halaman error atau tampilkan pesan
-            return "redirect:/error_page"; // Ganti dengan halaman yang sesuai
+            userId = 1; // or get from session/authentication
         }
 
-        System.out.println("User ID diterima: " + userId); // Cek apakah userId yang diterima valid
-
-        // Ambil user berdasarkan userId
         User user = userRepository.findById(userId).orElseThrow();
+        model.addAttribute("user", user);
+        model.addAttribute("userId", userId);
 
-        // Menambahkan user ke model
-        model.addAttribute("user", user);  // user ditambahkan ke model
-        model.addAttribute("userId", userId);  // Menambahkan userId ke model juga jika diperlukan
-
-        return "admin_dashboard"; // Kembali ke dashboard admin
+        return "admin_dashboard";
     }
 
 

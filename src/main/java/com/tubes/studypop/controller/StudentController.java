@@ -50,11 +50,5 @@ public class StudentController {
         return "flashcard_list";
     }
 
-    @GetMapping("/flashcard_topics")
-    public String flashcardTopics(@RequestParam Integer userId, Model model) {
-        List<TopikQuiz> topics = topicQuizRepository.findAll();
-        model.addAttribute("topics", topics);
-        model.addAttribute("userId", userId);
-        return "flashcard_topic_list";
-    }
+
 }
