@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Hasil Kuis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f9fc;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #9cc97f;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100vh;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+
+        .welcome {
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 40px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .main-content h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .main-content h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .stats-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stats-box h3 {
+            margin-top: 0;
+            color: #28a745;
+        }
+
+        .stats-item {
+            display: inline-block;
+            margin-right: 30px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .correct {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .incorrect {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .question-col {
+            width: 35%;
+        }
+
+        .answer-col {
+            width: 25%;
+        }
+
+        .status-col {
+            width: 15%;
+            text-align: center;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .back-btn {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+
+        .back-btn:hover {
+            background-color: #545b62;
+            text-decoration: none;
+            color: white;
+        }
+
+        .dashboard-btn {
+            background-color: #9cc97f;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .dashboard-btn:hover {
+            background-color: #7db85f;
+            text-decoration: none;
+            color: white;
+        }
+
+        .topic-name {
+            color: #28a745;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">StudyPop</div>
+        <div class="welcome">Welcome, student!</div>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1>Detail Hasil Kuis</h1>
+            <div class="topic-name" th:if="${!#lists.isEmpty(results)}" th:text="'Topik: ' + ${results[0].flashcard.topikQuiz.name}">Topik: -</div>
+            <div th:if="${!#lists.isEmpty(results)}" th:text="'Siswa: ' + ${results[0].user.username}" style="color: #6c757d; font-size: 1.1em;">Siswa: -</div>
+        </div>
+
+        <!-- Statistik Ringkasan -->
+        <div class="stats-box">
+            <h3>Ringkasan Hasil</h3>
+            <div class="stats-item">
+                <strong>Total Soal:</strong> <span th:text="${totalAnswers}">0</span>
+            </div>
+            <div class="stats-item">
+                <strong>Jawaban Benar:</strong> <span th:text="${correctAnswers}">0</span>
+            </div>
+            <div class="stats-item">
+                <strong>Akurasi:</strong> <span th:text="${#numbers.formatDecimal(accuracy, 1, 2)}">0</span>%
+            </div>
+        </div>
+
+        <!-- Tabel Detail Jawaban -->
+        <h2>Detail Jawaban per Soal</h2>
+
+        <div th:if="${#lists.isEmpty(results)}" style="color: #dc3545; font-weight: bold;">
+            <p>Tidak ada data jawaban ditemukan untuk siswa dan topik ini.</p>
+        </div>
+
+        <table th:if="${!#lists.isEmpty(results)}">
+            <thead>
+            <tr>
+                <th class="question-col">Pertanyaan</th>
+                <th class="answer-col">Jawaban Siswa</th>
+                <th class="answer-col">Jawaban Benar</th>
+                <th class="status-col">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="result : ${results}">
+                <!-- Pertanyaan -->
+                <td class="question-col" th:text="${result.flashcard.question}">Question</td>
+
+                <!-- Jawaban Siswa -->
+                <td class="answer-col" th:text="${result.studentAnswer}">Student Answer</td>
+
+                <!-- Jawaban Benar -->
+                <td class="answer-col" th:text="${result.flashcard.answer}">Correct Answer</td>
+
+                <!-- Status -->
+                <td class="status-col">
+                    <span th:if="${result.isCorrect}" class="correct">✓ Benar</span>
+                    <span th:if="${!result.isCorrect}" class="incorrect">✗ Salah</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Tombol Navigasi -->
+        <a href="/admin_quiz_statistic" class="back-btn">← Kembali ke Statistik</a>
+        <a href="/admin_dashboard" class="dashboard-btn">← Kembali ke Dashboard</a>
+    </div>
+</div>
+</body>
+</html>

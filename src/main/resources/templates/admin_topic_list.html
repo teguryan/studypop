@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Topik Quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f9fc;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #9cc97f;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100vh;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .welcome {
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 40px;
+        }
+
+        .main-content h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .action-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            background-color: #218838;
+            text-decoration: none;
+            color: white;
+        }
+
+        /* Stats Card */
+        .stats-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stats-icon {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .stats-info h3 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stats-info p {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        /* Table Styles */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            font-size: 14px;
+            color: #333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Topic Name Styling */
+        .topic-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .topic-number {
+            font-weight: 600;
+            color: #6c757d;
+            background-color: #e9ecef;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        /* Dashboard Button */
+        .dashboard-btn {
+            background-color: #9cc97f;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            display: inline-block;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .dashboard-btn:hover {
+            background-color: #7db85f;
+            text-decoration: none;
+            color: white;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            color: #adb5bd;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: #6c757d;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .empty-state p {
+            color: #adb5bd;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafe 100%);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25), 0 8px 32px rgba(156, 201, 127, 0.15);
+            padding: 40px;
+            max-width: 520px;
+            width: 90%;
+            position: relative;
+            animation: slideInUp 0.4s ease;
+            border: 1px solid rgba(156, 201, 127, 0.1);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 35px;
+            position: relative;
+        }
+
+        .modal-icon {
+            background: linear-gradient(135deg, #9cc97f 0%, #7db85f 100%);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 25px rgba(156, 201, 127, 0.3);
+        }
+
+        .modal-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .modal-subtitle {
+            color: #7f8c8d;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #fff;
+            border: 2px solid #e1e8ed;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .close-btn:hover {
+            background: #f8f9fa;
+            border-color: #9cc97f;
+            color: #9cc97f;
+            transform: rotate(90deg);
+        }
+
+        /* Form Styles in Modal */
+        .modal-form {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .form-group label::after {
+            content: '*';
+            color: #e74c3c;
+            margin-left: 4px;
+            font-size: 18px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 18px 24px;
+            border: 2px solid #e1e8ed;
+            border-radius: 16px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            color: #2c3e50;
+            background: #ffffff;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #9cc97f;
+            background: #ffffff;
+            box-shadow: 0 0 0 6px rgba(156, 201, 127, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .form-group input[type="text"]::placeholder {
+            color: #95a5a6;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #bdc3c7;
+            font-size: 20px;
+            pointer-events: none;
+            transition: color 0.3s ease;
+        }
+
+        .form-group input[type="text"]:focus + .input-icon {
+            color: #9cc97f;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 35px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #9cc97f 0%, #7db85f 100%);
+            color: white;
+            border: none;
+            padding: 18px 32px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(156, 201, 127, 0.35);
+            min-width: 140px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-submit:hover::before {
+            left: 100%;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #7db85f 0%, #6a9c57 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(156, 201, 127, 0.45);
+        }
+
+        .btn-submit:active {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(156, 201, 127, 0.35);
+        }
+
+        .btn-cancel {
+            background: linear-gradient(135deg, #ecf0f1 0%, #d5dbdb 100%);
+            color: #2c3e50;
+            border: 2px solid #bdc3c7;
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 140px;
+        }
+
+        .btn-cancel:hover {
+            background: linear-gradient(135deg, #d5dbdb 0%, #bdc3c7 100%);
+            border-color: #95a5a6;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Success Animation */
+        .success-animation {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .success-icon {
+            font-size: 64px;
+            color: #27ae60;
+            margin-bottom: 20px;
+            animation: bounceIn 0.6s ease;
+        }
+
+        /* Loading State */
+        .btn-submit.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-submit.loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            margin: auto;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: button-loading-spinner 1s ease infinite;
+        }
+
+        @keyframes button-loading-spinner {
+            from {
+                transform: rotate(0turn);
+            }
+            to {
+                transform: rotate(1turn);
+            }
+        }
+
+        /* Error State */
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error input {
+            border-color: #e74c3c;
+        }
+
+        /* Alert Message */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes bounceIn {
+            0%, 20%, 40%, 60%, 80% {
+                animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+            }
+            0% {
+                opacity: 0;
+                transform: scale3d(.3, .3, .3);
+            }
+            20% {
+                transform: scale3d(1.1, 1.1, 1.1);
+            }
+            40% {
+                transform: scale3d(.9, .9, .9);
+            }
+            60% {
+                opacity: 1;
+                transform: scale3d(1.03, 1.03, 1.03);
+            }
+            80% {
+                transform: scale3d(.97, .97, .97);
+            }
+            100% {
+                opacity: 1;
+                transform: scale3d(1, 1, 1);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+                padding: 20px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 10px 12px;
+            }
+
+            .stats-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .modal-content {
+                padding: 30px 25px;
+                margin: 20px;
+                border-radius: 20px;
+            }
+
+            .modal-header h2 {
+                font-size: 24px;
+            }
+
+            .modal-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+
+            .container {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 25px 20px;
+                margin: 10px;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+
+            .btn-submit, .btn-cancel {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">StudyPop</div>
+        <div class="welcome">Welcome, Admin!</div>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>Daftar Topik Quiz</h1>
+
+        <!-- Alert Messages -->
+        <div th:if="${param.success}" class="alert alert-success">
+            ✅ Topik berhasil ditambahkan!
+        </div>
+
+        <div th:if="${param.error}" class="alert alert-error">
+            ❌ Terjadi kesalahan saat menambahkan topik. Silakan coba lagi.
+        </div>
+
+        <!-- Stats Card -->
+        <div class="stats-card">
+            <div class="stats-icon">📚</div>
+            <div class="stats-info">
+                <h3 th:text="${#lists.size(topics) != null ? #lists.size(topics) : 3}">3</h3>
+                <p>Total Topik Tersedia</p>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="action-btn" onclick="openModal()">
+                + Tambah Topik Baru
+            </button>
+            <a href="/admin/flashcards" class="action-btn" style="background-color: #6c757d;">
+                📋 Kelola Flashcard
+            </a>
+        </div>
+
+        <!-- Topics Table -->
+        <table th:if="${topics != null and !topics.empty}">
+            <thead>
+            <tr>
+                <th style="width: 80px;">No</th>
+                <th>Nama Topik</th>
+                <th style="width: 150px;">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="topic, iterStat : ${topics}">
+                <td>
+                    <div class="topic-number" th:text="${iterStat.count}">1</div>
+                </td>
+                <td>
+                    <span class="topic-name" th:text="${topic.name}">Nama Topik</span>
+                </td>
+                <td>
+                    <span style="background-color: #d4edda; color: #155724; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">
+                        ✓ Aktif
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Static table for demo (remove when using Thymeleaf) -->
+        <table th:unless="${topics != null and !topics.empty}">
+            <thead>
+            <tr>
+                <th style="width: 80px;">No</th>
+                <th>Nama Topik</th>
+                <th style="width: 150px;">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="topic-number">1</div>
+                </td>
+                <td>
+                    <span class="topic-name">Matematika</span>
+                </td>
+                <td>
+                    <span style="background-color: #d4edda; color: #155724; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">
+                        ✓ Aktif
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="topic-number">2</div>
+                </td>
+                <td>
+                    <span class="topic-name">Pemrograman Web</span>
+                </td>
+                <td>
+                    <span style="background-color: #d4edda; color: #155724; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">
+                        ✓ Aktif
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="topic-number">3</div>
+                </td>
+                <td>
+                    <span class="topic-name">PBO</span>
+                </td>
+                <td>
+                    <span style="background-color: #d4edda; color: #155724; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">
+                        ✓ Aktif
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Navigation -->
+        <div style="display: flex; gap: 10px;">
+            <a href="/admin_dashboard" class="dashboard-btn">
+                ← Kembali ke Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Adding Topic -->
+<div id="addTopicModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <div class="modal-header">
+            <div class="modal-icon">📚</div>
+            <h2>Tambah Topik Baru</h2>
+            <p class="modal-subtitle">Buat topik quiz baru untuk siswa</p>
+        </div>
+
+        <!-- FORM INI YANG DIPERBAIKI - HAPUS onsubmit="handleSubmit(event)" -->
+        <form class="modal-form" action="/admin/topics/add" method="post">
+            <div class="form-group">
+                <label for="topicName">Nama Topik</label>
+                <div class="input-wrapper">
+                    <input type="text" id="topicName" name="name" placeholder="Contoh: Matematika Dasar" required>
+                    <span class="input-icon">✏️</span>
+                </div>
+                <div class="error-message" id="topicNameError">Nama topik harus diisi</div>
+            </div>
+
+            <div class="modal-buttons">
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    💾 Simpan Topik
+                </button>
+                <button type="button" class="btn-cancel" onclick="closeModal()">
+                    ❌ Batal
+                </button>
+            </div>
+        </form>
+
+        <!-- Success Animation (hidden by default) -->
+        <div class="success-animation" id="successAnimation">
+            <div class="success-icon">✅</div>
+            <h3 style="color: #27ae60; margin-bottom: 10px;">Berhasil!</h3>
+            <p style="color: #7f8c8d;">Topik baru telah ditambahkan</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModal() {
+        document.getElementById('addTopicModal').classList.add('show');
+        document.body.style.overflow = 'hidden';
+        // Auto focus on input
+        setTimeout(() => {
+            document.getElementById('topicName').focus();
+        }, 300);
+    }
+
+    function closeModal() {
+        document.getElementById('addTopicModal').classList.remove('show');
+        document.body.style.overflow = 'auto';
+        // Reset form
+        resetForm();
+    }
+
+    function resetForm() {
+        document.getElementById('topicName').value = '';
+        document.getElementById('successAnimation').style.display = 'none';
+        document.querySelector('.modal-form').style.display = 'block';
+
+        // Remove error states
+        const formGroup = document.querySelector('.form-group');
+        const errorMessage = document.getElementById('topicNameError');
+        formGroup.classList.remove('error');
+        errorMessage.style.display = 'none';
+
+        // Remove loading state
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.classList.remove('loading');
+        submitBtn.disabled = false;
+    }
+
+    function validateForm() {
+        const topicName = document.getElementById('topicName').value.trim();
+        const formGroup = document.querySelector('.form-group');
+        const errorMessage = document.getElementById('topicNameError');
+
+        if (!topicName) {
+            formGroup.classList.add('error');
+            errorMessage.style.display = 'block';
+            return false;
+        }
+
+        formGroup.classList.remove('error');
+        errorMessage.style.display = 'none';
+        return true;
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('addTopicModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+
+    // Real-time validation
+    document.getElementById('topicName').addEventListener('input', function() {
+        const formGroup = document.querySelector('.form-group');
+        const errorMessage = document.getElementById('topicNameError');
+
+        if (this.value.trim()) {
+            formGroup.classList.remove('error');
+            errorMessage.style.display = 'none';
+        }
+    });
+
+    // Auto close modal after successful submission
+    // Check for success parameter in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success')) {
+        // Remove success parameter from URL
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+    }
+</script>
+</body>
+</html>
