@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manajemen Flashcard</title>
+    <title>StudyPop - Flashcard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -17,14 +15,11 @@
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f7f9fc;
-        }
-
-        .container {
             display: flex;
-            min-height: 100vh;
+            height: 100vh;
+            margin: 0;
         }
 
-        /* Sidebar Styles */
         .sidebar {
             width: 250px;
             background-color: #9cc97f;
@@ -69,394 +64,268 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
-        /* Main Content Styles */
+        /* Main Content */
         .main-content {
             flex: 1;
-            margin-left: 250px;
-            padding: 40px;
-        }
-
-        .main-content h1 {
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 28px;
-        }
-
-        /* Action Buttons */
-        .action-buttons {
             display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+            margin-left: 250px;
+        }
+
+        /* Progress Header */
+        .progress-header {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             gap: 10px;
-            margin-bottom: 30px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e0e0e0;
         }
 
-        .action-btn {
-            background-color: #28a745;
-            color: white;
-            padding: 12px 20px;
-            text-decoration: none;
-            border-radius: 8px;
-            display: inline-block;
-            font-size: 14px;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
-            border: none;
-            cursor: pointer;
+        .progress-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        .action-btn:hover {
-            background-color: #218838;
-            text-decoration: none;
-            color: white;
-        }
-
-        .action-btn.secondary {
-            background-color: #6c757d;
-        }
-
-        .action-btn.secondary:hover {
-            background-color: #5a6268;
-        }
-
-        /* Table Styles */
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-
-        th, td {
-            padding: 15px 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            color: #495057;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        td {
-            font-size: 14px;
+        .progress-counter {
+            font-size: 18px;
+            font-weight: bold;
             color: #333;
         }
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+        .topic-title {
+            font-size: 18px;
+            color: #666;
         }
 
-        tr:hover {
-            background-color: #f5f5f5;
+        /* Progress Bar */
+        .progress-bar {
+            width: 200px;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
         }
 
-        /* Question and Answer Cell Styling */
-        .question-cell, .answer-cell {
-            max-width: 200px;
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8BC34A, #4CAF50);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Flashcard Container */
+        .flashcard-container {
+            margin-top: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        /* Card */
+        .card {
+            width: 500px;
+            height: 300px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            border: 3px solid #e0e0e0;
+            perspective: 1000px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 17px;
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateX(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            border-radius: 17px;
+            background: white;
+        }
+
+        .card-back {
+            transform: rotateX(180deg);
+            background: #f8f9fa;
         }
 
         .question-text, .answer-text {
-            display: block;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 180px;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .question-text:hover, .answer-text:hover {
-            color: #007bff;
-        }
-
-        /* Topic Badge */
-        .topic-badge {
-            background-color: #e9ecef;
-            color: #495057;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        /* Delete Button */
-        .delete-btn {
-            background-color: #dc3545;
-            color: white;
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: background-color 0.3s ease;
-        }
-
-        .delete-btn:hover {
-            background-color: #c82333;
-        }
-
-        /* Dashboard Button */
-        .dashboard-btn {
-            background-color: #9cc97f;
-            color: white;
-            padding: 12px 20px;
-            text-decoration: none;
-            border-radius: 8px;
-            display: inline-block;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
-        }
-
-        .dashboard-btn:hover {
-            background-color: #7db85f;
-            text-decoration: none;
-            color: white;
-        }
-
-        /* Empty State */
-        .empty-state {
+            font-size: 20px;
             text-align: center;
-            padding: 60px 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .empty-state h3 {
-            color: #6c757d;
-            margin-bottom: 10px;
-        }
-
-        .empty-state p {
-            color: #adb5bd;
+            color: #333;
+            line-height: 1.5;
             margin-bottom: 20px;
         }
 
-        /* Error Message */
-        .error-message {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #f5c6cb;
+        .answer-text {
+            font-weight: 600;
+            color: #2e7d32;
         }
 
-        /* Success Message */
-        .success-message {
-            display: none;
-            background-color: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
+        /* Hint Button */
+        .hint-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            color: #e65100;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        .success-message.show {
-            display: block;
-            animation: slideDown 0.3s ease-out;
+        .hint-btn:hover {
+            background: #ff9800;
+            color: white;
+            transform: scale(1.05);
         }
 
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .hint-btn:active {
+            transform: scale(0.95);
         }
 
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+        /* Flip Instruction */
+        .flip-instruction {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #999;
+            font-style: italic;
         }
 
-        .modal.show {
+        /* Navigation */
+        .navigation {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .modal-title {
             font-size: 20px;
-            font-weight: 600;
-            color: #333;
+            color: #666;
+            transition: all 0.3s;
+            border: 2px solid #e0e0e0;
         }
 
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #adb5bd;
+        .nav-btn:hover:not(:disabled) {
+            background: #8BC34A;
+            color: white;
+            transform: scale(1.1);
+            border-color: #8BC34A;
         }
 
-        .modal-body {
-            margin-bottom: 25px;
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
         }
 
-        .modal-field {
-            margin-bottom: 20px;
-        }
-
-        .modal-label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: #495057;
-        }
-
-        .modal-text {
-            background-color: #f8f9fa;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid #dee2e6;
-            line-height: 1.6;
-            word-wrap: break-word;
-        }
-
-        /* Form Styles in Modal */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #495057;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
-            box-sizing: border-box;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #28a745;
-            box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
-        }
-
-        .form-select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            background-color: white;
-            cursor: pointer;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-select:focus {
-            outline: none;
-            border-color: #28a745;
-            box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        .modal-btn {
+        .finish-btn {
+            background: #4CAF50;
+            color: white;
             padding: 12px 24px;
+            border-radius: 25px;
             border: none;
-            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            font-weight: 500;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s;
+            border: 2px solid #4CAF50;
         }
 
-        .modal-btn.primary {
-            background-color: #28a745;
+        .finish-btn:hover {
+            background: #388E3C;
+            transform: scale(1.05);
+        }
+
+        .back-btn {
+            background: #6c757d;
             color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #6c757d;
+            text-decoration: none;
+            display: inline-block;
         }
 
-        .modal-btn.primary:hover {
-            background-color: #218838;
+        .back-btn:hover {
+            background: #5a6268;
+            transform: scale(1.05);
         }
 
-        .modal-btn.secondary {
-            background-color: #6c757d;
-            color: white;
+        /* Hidden flashcards */
+        .flashcard-data {
+            display: none;
         }
 
-        .modal-btn.secondary:hover {
-            background-color: #5a6268;
-        }
-
-        .modal-btn.danger {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .modal-btn.danger:hover {
-            background-color: #c82333;
-        }
-
-        /* Responsive Design */
         @media (max-width: 768px) {
-            .sidebar {
-                width: 200px;
-            }
-
-            .main-content {
-                margin-left: 200px;
-                padding: 20px;
-            }
-
-            .modal-content {
-                width: 95%;
-                padding: 20px;
-            }
-        }
-
-        @media (max-width: 600px) {
             .sidebar {
                 width: 100%;
                 height: auto;
@@ -468,272 +337,318 @@
                 padding: 30px 20px;
             }
 
-            .container {
-                flex-direction: column;
+            .card {
+                width: 400px;
+                height: 250px;
             }
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo">StudyPop</div>
-        <div class="welcome">Welcome, Admin!</div>
-        <a href="/logout" class="logout-btn">Logout</a>
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="logo">StudyPop</div>
+    <div class="welcome">Welcome, student!</div>
+    <a href="/logout" class="logout-btn">Logout</a>
+</div>
+
+<!-- Hidden flashcard data -->
+<div class="flashcard-data">
+    <div th:each="flashcard, iterStat : ${flashcards}"
+         class="flashcard-item"
+         th:attr="data-question=${flashcard.question}, data-answer=${flashcard.answer}, data-index=${iterStat.index}">
+    </div>
+    <div class="topic-data" th:attr="data-topic=${topik.name}"></div>
+    <div class="user-data" th:attr="data-user=${userId}"></div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="progress-header">
+        <div class="progress-info">
+            <div class="progress-counter" id="progressCounter">0 / <span id="totalCards">0</span></div>
+            <div class="topic-title" th:text="${topik.name}">Nama Topik</div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <h1>Daftar Flashcard</h1>
-
-        <!-- Error Message -->
-        <div th:if="${error}" class="error-message">
-            <strong>Error!</strong> <span th:text="${error}"></span>
-        </div>
-
-        <!-- Success Message -->
-        <div id="successMessage" class="success-message">
-            <strong>Berhasil!</strong> Flashcard telah berhasil ditambahkan/dihapus.
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-            <button onclick="showAddFlashcardModal()" class="action-btn">
-                + Tambah Flashcard
-            </button>
-            <a href="/admin/topics" class="action-btn secondary">
-                📚 Manajemen Topik
-            </a>
-        </div>
-
-        <!-- Empty State -->
-        <div th:if="${flashcards == null or #lists.isEmpty(flashcards)}" class="empty-state">
-            <h3>Belum Ada Flashcard</h3>
-            <p>Silakan tambahkan flashcard pertama Anda dengan mengklik tombol "Tambah Flashcard" di atas.</p>
-            <button onclick="showAddFlashcardModal()" class="action-btn">
-                + Tambah Flashcard Pertama
-            </button>
-        </div>
-
-        <!-- Flashcard Table -->
-        <table th:if="${flashcards != null and !#lists.isEmpty(flashcards)}">
-            <thead>
-            <tr>
-                <th style="width: 50px;">NO</th>
-                <th style="width: 400px;">PERTANYAAN</th>
-                <th style="width: 400px;">JAWABAN</th>
-                <th style="width: 150px;">TOPIK</th>
-                <th style="width: 120px;">AKSI</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="fc, iter : ${flashcards}">
-                <td th:text="${iter.count}" style="font-weight: 600; color: #6c757d;">1</td>
-                <td class="question-cell">
-                    <span class="question-text"
-                          th:text="${fc.question ?: 'N/A'}"
-                          th:title="${fc.question ?: 'N/A'}"
-                          th:data-content="${fc.question ?: 'N/A'}"
-                          onclick="showDetailModal('Pertanyaan', this.getAttribute('data-content'))">
-                        Berapa 5 + 3 ?
-                    </span>
-                </td>
-                <td class="answer-cell">
-                    <span class="answer-text"
-                          th:text="${fc.answer ?: 'N/A'}"
-                          th:title="${fc.answer ?: 'N/A'}"
-                          th:data-content="${fc.answer ?: 'N/A'}"
-                          onclick="showDetailModal('Jawaban', this.getAttribute('data-content'))">
-                        8
-                    </span>
-                </td>
-                <td>
-                    <span class="topic-badge" th:text="${fc.topikQuiz?.name ?: 'No Topic'}">Matematika</span>
-                </td>
-                <td>
-                    <button class="delete-btn"
-                            th:data-id="${fc.id}"
-                            onclick="showDeleteModal(this.getAttribute('data-id'))">
-                        🗑️ Hapus
+    <!-- Flashcard Container -->
+    <div class="flashcard-container">
+        <!-- Card -->
+        <div class="card" onclick="flipCard()">
+            <div class="card-inner">
+                <!-- Front Side (Question) -->
+                <div class="card-front">
+                    <button class="hint-btn" onclick="event.stopPropagation(); showHint()">
+                        💡 Dapatkan petunjuk
                     </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <!-- Back to Dashboard Button -->
-        <a th:href="@{/admin_dashboard(userId=1)}" class="dashboard-btn">
-            ← Kembali ke Dashboard
-        </a>
-    </div>
-</div>
-
-<!-- Add Flashcard Modal -->
-<div id="addFlashcardModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="modal-title">Tambah Flashcard</h3>
-            <button class="close-btn" onclick="closeModal('addFlashcardModal')">&times;</button>
-        </div>
-        <form id="addFlashcardForm" th:action="@{/admin/flashcards/add}" method="post">
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label" for="question">Pertanyaan:</label>
-                    <input type="text" id="question" name="question" class="form-input" required
-                           placeholder="Masukkan pertanyaan flashcard">
+                    <div class="question-text" id="questionText">Loading...</div>
+                    <div class="flip-instruction" id="flipInstruction">Click the card to flip</div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="answer">Jawaban:</label>
-                    <input type="text" id="answer" name="answer" class="form-input" required
-                           placeholder="Masukkan jawaban">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="topikId">Topik:</label>
-                    <select id="topikId" name="topikId" class="form-select" required>
-                        <option value="">Pilih Topik</option>
-                        <!-- Sample options - in real implementation, this would be populated from backend -->
-                        <option value="1">Matematika</option>
-                        <option value="2">Pemrograman Web</option>
-                        <!-- Thymeleaf version: -->
-                        <!-- <option th:each="topic : ${topics}" th:value="${topic.id}" th:text="${topic.name}"></option> -->
-                    </select>
+                <!-- Back Side (Answer) -->
+                <div class="card-back">
+                    <div class="answer-text" id="answerText">Loading...</div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="modal-btn secondary" onclick="closeModal('addFlashcardModal')">
-                    Batal
-                </button>
-                <button type="submit" class="modal-btn primary">
-                    Simpan
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
+        </div>
 
-<!-- Detail Modal -->
-<div id="detailModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 id="detailModalTitle" class="modal-title">Detail</h3>
-            <button class="close-btn" onclick="closeModal('detailModal')">&times;</button>
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" onclick="previousCard()">
+                ←
+            </button>
+            <button class="nav-btn" id="nextBtn" onclick="nextCard()">
+                →
+            </button>
+            <button class="finish-btn" id="finishBtn" onclick="finishFlashcard()" style="display: none;">
+                Selesai
+            </button>
         </div>
-        <div class="modal-body">
-            <div class="modal-field">
-                <div id="detailModalContent" class="modal-text"></div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="modal-btn secondary" onclick="closeModal('detailModal')">Tutup</button>
-        </div>
-    </div>
-</div>
 
-<!-- Delete Confirmation Modal -->
-<div id="deleteModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="modal-title">Konfirmasi Hapus</h3>
-            <button class="close-btn" onclick="closeModal('deleteModal')">&times;</button>
-        </div>
-        <div class="modal-body">
-            <p>Apakah Anda yakin ingin menghapus flashcard ini? Tindakan ini tidak dapat dibatalkan.</p>
-        </div>
-        <div class="modal-footer">
-            <button class="modal-btn secondary" onclick="closeModal('deleteModal')">Batal</button>
-            <button id="confirmDeleteBtn" class="modal-btn danger" onclick="confirmDelete()">Hapus</button>
+        <!-- Back to Topics Button -->
+        <div style="margin-top: 20px; display: flex; gap: 15px;">
+            <a th:href="@{/flashcard_topics(userId=${userId})}" class="back-btn">
+                Kembali ke Pilihan Topik
+            </a>
+            <a th:href="@{/student_dashboard(userId=${userId})}" class="back-btn">
+                Kembali ke Dashboard
+            </a>
         </div>
     </div>
 </div>
 
 <script>
-    let currentDeleteId = null;
+    // Mengambil data dari HTML yang sudah di-render oleh Thymeleaf
+    var flashcardData = [];
+    var topicName = '';
+    var userId = '';
+    var currentIndex = 0;
+    var isFlipped = false;
+    var hintShown = false;
 
-    // Show add flashcard modal
-    function showAddFlashcardModal() {
-        // Reset form
-        document.getElementById('addFlashcardForm').reset();
-        showModal('addFlashcardModal');
+    // Polyfill untuk String.repeat jika tidak ada
+    if (!String.prototype.repeat) {
+        String.prototype.repeat = function(count) {
+            if (count < 0) throw new RangeError('repeat count must be non-negative');
+            if (count == Infinity) throw new RangeError('repeat count must be less than infinity');
+            count = Math.floor(count);
+            if (this.length == 0 || count == 0) return '';
+            var result = '';
+            for (var i = 0; i < count; i++) {
+                result += this;
+            }
+            return result;
+        };
     }
 
-    // Show detail modal for truncated text
-    function showDetailModal(title, content) {
-        document.getElementById('detailModalTitle').textContent = title;
-        document.getElementById('detailModalContent').textContent = content || 'N/A';
-        showModal('detailModal');
-    }
+    function loadFlashcardData() {
+        // Ambil semua flashcard item dan urutkan berdasarkan data-index
+        var flashcardItems = document.querySelectorAll('.flashcard-item');
+        var itemsArray = Array.from(flashcardItems);
 
-    // Show delete confirmation modal
-    function showDeleteModal(id) {
-        currentDeleteId = id;
-        showModal('deleteModal');
-    }
+        // Urutkan berdasarkan data-index untuk memastikan urutan yang benar
+        itemsArray.sort(function(a, b) {
+            var indexA = parseInt(a.getAttribute('data-index')) || 0;
+            var indexB = parseInt(b.getAttribute('data-index')) || 0;
+            return indexA - indexB;
+        });
 
-    // Show modal
-    function showModal(modalId) {
-        const modal = document.getElementById(modalId);
-        modal.classList.add('show');
-        document.body.style.overflow = 'hidden';
-    }
+        flashcardData = [];
+        itemsArray.forEach(function(item) {
+            var question = item.getAttribute('data-question');
+            var answer = item.getAttribute('data-answer');
 
-    // Close modal
-    function closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        modal.classList.remove('show');
-        document.body.style.overflow = 'auto';
-    }
-
-    // Confirm delete
-    function confirmDelete() {
-        if (currentDeleteId) {
-            window.location.href = `/admin/flashcards/delete?id=${currentDeleteId}`;
-        }
-    }
-
-    // Show success message
-    function showSuccessMessage() {
-        const successMsg = document.getElementById('successMessage');
-        successMsg.classList.add('show');
-        setTimeout(() => {
-            successMsg.classList.remove('show');
-        }, 3000);
-    }
-
-    // Handle form submission
-    document.getElementById('addFlashcardForm').addEventListener('submit', function(e) {
-        // Form will be submitted normally to backend
-        // You might want to add client-side validation here
-    });
-
-    // Close modal when clicking outside
-    window.addEventListener('click', function(event) {
-        const modals = document.querySelectorAll('.modal');
-        modals.forEach(modal => {
-            if (event.target === modal) {
-                closeModal(modal.id);
+            if (question && answer) {
+                flashcardData.push({
+                    question: question,
+                    answer: answer
+                });
             }
         });
-    });
 
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            const openModal = document.querySelector('.modal.show');
-            if (openModal) {
-                closeModal(openModal.id);
+        // Debug: Log data yang dimuat
+        console.log('Flashcard data loaded:', flashcardData);
+
+        // Ambil topic name
+        var topicElement = document.querySelector('.topic-data');
+        if (topicElement) {
+            topicName = topicElement.getAttribute('data-topic');
+        }
+
+        // Ambil user ID
+        var userElement = document.querySelector('.user-data');
+        if (userElement) {
+            userId = userElement.getAttribute('data-user');
+        }
+    }
+
+    function updateCard() {
+        console.log('updateCard called, currentIndex:', currentIndex);
+        console.log('flashcardData.length:', flashcardData.length);
+
+        // Check if there are flashcards
+        if (flashcardData.length === 0) {
+            document.getElementById('questionText').textContent = 'Tidak ada flashcard untuk topik ini.';
+            document.getElementById('answerText').textContent = 'Silakan tambahkan flashcard terlebih dahulu.';
+
+            // Fixed: Properly handle totalCards element
+            var totalCardsElement = document.getElementById('totalCards');
+            if (totalCardsElement) {
+                totalCardsElement.textContent = '0';
+            }
+            return;
+        }
+
+        // Pastikan currentIndex tidak melebihi batas
+        if (currentIndex >= flashcardData.length) {
+            currentIndex = flashcardData.length - 1;
+        }
+        if (currentIndex < 0) {
+            currentIndex = 0;
+        }
+
+        var card = document.querySelector('.card');
+        var questionText = document.getElementById('questionText');
+        var answerText = document.getElementById('answerText');
+        var progressCounterElement = document.getElementById('progressCounter');
+        var progressFill = document.querySelector('.progress-fill');
+        var prevBtn = document.getElementById('prevBtn');
+        var nextBtn = document.getElementById('nextBtn');
+        var finishBtn = document.getElementById('finishBtn');
+        var flipInstruction = document.getElementById('flipInstruction');
+        var totalCardsElement = document.getElementById('totalCards');
+
+        // Reset card state
+        if (card) {
+            card.classList.remove('flipped');
+        }
+        isFlipped = false;
+        hintShown = false;
+
+        // Reset hint button
+        var hintBtn = document.querySelector('.hint-btn');
+        if (hintBtn) {
+            hintBtn.innerHTML = '💡 Dapatkan petunjuk';
+        }
+
+        // Update content dengan data yang benar
+        var currentCard = flashcardData[currentIndex];
+        if (questionText) questionText.textContent = currentCard.question;
+        if (answerText) answerText.textContent = currentCard.answer;
+
+        // Debug: Log kartu yang sedang ditampilkan
+        console.log('Current index:', currentIndex);
+        console.log('Current card:', currentCard);
+
+        // Fixed: Update total cards properly
+        if (totalCardsElement) {
+            totalCardsElement.textContent = flashcardData.length;
+        }
+
+        // Fixed: Update progress counter properly
+        if (progressCounterElement) {
+            progressCounterElement.innerHTML = (currentIndex + 1) + ' / ' + flashcardData.length;
+        }
+
+        // Fixed: Progress calculation - make sure it progresses correctly
+        var progressPercentage = ((currentIndex + 1) / flashcardData.length) * 100;
+        if (progressFill) {
+            progressFill.style.width = progressPercentage + '%';
+        }
+
+        // Fixed: Navigation button logic
+        if (prevBtn) {
+            prevBtn.disabled = (currentIndex <= 0);
+        }
+
+        // Fixed: Show/hide next and finish buttons
+        if (currentIndex >= flashcardData.length - 1) {
+            // Last card: hide next, show finish
+            if (nextBtn) nextBtn.style.display = 'none';
+            if (finishBtn) finishBtn.style.display = 'inline-block';
+        } else {
+            // Not last card: show next, hide finish
+            if (nextBtn) nextBtn.style.display = 'inline-block';
+            if (finishBtn) finishBtn.style.display = 'none';
+        }
+
+        // Show flip instruction only on first card
+        if (flipInstruction) {
+            if (currentIndex === 0) {
+                flipInstruction.style.display = 'block';
+            } else {
+                flipInstruction.style.display = 'none';
             }
         }
-    });
+    }
 
-    // Check URL parameters for success messages
-    window.addEventListener('load', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('deleted') === 'true' || urlParams.get('added') === 'true') {
-            showSuccessMessage();
+    function flipCard() {
+        var card = document.querySelector('.card');
+        if (card) {
+            card.classList.toggle('flipped');
+            isFlipped = !isFlipped;
         }
+    }
+
+    function showHint() {
+        if (flashcardData.length === 0) return;
+
+        var hintBtn = document.querySelector('.hint-btn');
+        if (!hintBtn) return;
+
+        if (!hintShown) {
+            // Show hint
+            var answer = flashcardData[currentIndex].answer;
+            // Ambil 2 huruf pertama dari jawaban
+            var hint = answer.substring(0, 2) + '_'.repeat(Math.max(0, answer.length - 2));
+
+            hintBtn.innerHTML = '💡 ' + hint;
+            hintShown = true;
+        } else {
+            // Hide hint
+            hintBtn.innerHTML = '💡 Dapatkan petunjuk';
+            hintShown = false;
+        }
+    }
+
+    function nextCard() {
+        console.log('nextCard called, currentIndex:', currentIndex, 'flashcardData.length:', flashcardData.length);
+        if (currentIndex < flashcardData.length - 1) {
+            currentIndex++;
+            console.log('Moving to next card, new currentIndex:', currentIndex);
+            updateCard();
+        }
+    }
+
+    function previousCard() {
+        console.log('previousCard called, currentIndex:', currentIndex);
+        if (currentIndex > 0) {
+            currentIndex--;
+            console.log('Moving to previous card, new currentIndex:', currentIndex);
+            updateCard();
+        }
+    }
+
+    function finishFlashcard() {
+        alert('Selamat! Anda telah menyelesaikan semua flashcard untuk topik: ' + topicName);
+        // Redirect to topics page
+        if (userId) {
+            window.location.href = '/flashcard_topics?userId=' + userId;
+        }
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, initializing...');
+        // Pastikan currentIndex dimulai dari 0
+        currentIndex = 0;
+        loadFlashcardData();
+        console.log('After loadFlashcardData, flashcardData:', flashcardData);
+        updateCard();
+        console.log('Initialization complete, currentIndex:', currentIndex);
     });
 </script>
 </body>
